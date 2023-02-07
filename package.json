@@ -1,0 +1,18 @@
+{
+  "name": "e_commerce_api",
+  "version": "1.0.0",
+  "description": "E-commerce API for a business.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Yasin Sefa Kırman",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "joi": "^17.7.0",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.20"
+  }
+}
