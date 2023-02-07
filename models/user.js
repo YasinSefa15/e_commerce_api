@@ -12,5 +12,18 @@ exports.findAll = async () => {
             }
         })
     })
+}
 
+exports.create = async (values) => {
+    let sql = `insert into users (name) values ('${values.name}')`
+
+    return new Promise((resolve, reject) => {
+        connection.query(sql, (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    })
 }
