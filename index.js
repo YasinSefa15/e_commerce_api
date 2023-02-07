@@ -15,5 +15,5 @@ app.use(express.urlencoded())
 app.use('/api', api_routes)
 
 
-app.listen(process.env.port, () => console.log(`Server running on port: http://${process.env.host}:${process.env.port}`))
+app.listen(process.env.PORT, () => console.log(`Server running on port: http://${process.env.HOST}:${process.env.PORT}`))
 
