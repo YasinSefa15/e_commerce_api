@@ -7,7 +7,7 @@ const api_routes = router
     .get('/', function (req, res) {
         res.send("Successful API route")
     })
-    .use('/user', user_router)
+    .use('/users', user_router)
 
 
 module.exports =  api_routes

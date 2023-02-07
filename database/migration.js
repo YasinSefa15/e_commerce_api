@@ -1,6 +1,6 @@
 const migration = require('mysql-migrations');
 const mysql = require("mysql");
-const dotenv = require('dotenv').config({path: __dirname + '/../.env'})
+require('dotenv').config({path: __dirname + '/../.env'})
 
 
 //to create migration file enter : node migration.js add migration create_table_users
