@@ -1,8 +1,7 @@
 const express = require('express')
 const api_routes = require("./routes/routes");
-const dotenv = require('dotenv')
+const dotenv = require('dotenv').config()
 
-dotenv.config()
 
 //You can get the mysql connection like that
 //const con = require('./db')
