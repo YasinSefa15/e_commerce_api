@@ -1,7 +1,6 @@
 const user = require('../models/user')
 const {successful_create, server_error, successful_login, unsuccessful} = require("../helpers/response_helper");
 const {validate_or_throw_error} = require("../helpers/validation_helper")
-const logger = require("../logs/logger");
 const Joi = require("joi")
 const bcrypt = require("bcrypt")
 
@@ -18,12 +17,13 @@ exports.register = (req, res) => {
 
     validate_or_throw_error(schema, req.body, res)
 
-    user.create(req.body).then(result => {
-        successful_create(res)
-    }).catch(error => {
-        logger.error(error)
-        server_error(res)
-    })
+    user.create(req.body)
+        .then(result => {
+            successful_create(res)
+        })
+        .catch(error => {
+            server_error(res)
+        })
 }
 
 exports.login = (req, res) => {
@@ -34,17 +34,31 @@ exports.login = (req, res) => {
 
     validate_or_throw_error(schema, req.body, res)
 
-    user.findOneBy({column: "e_mail", value: req.body.e_mail}).then(async result => {
-        const password_matched = await bcrypt.compare(req.body.password, result[0].password)
-        if (password_matched) {
-            successful_login(result, res, "token_xx")
-        } else {
-            unsuccessful(res, "E-mail and/or password field is wrong")
-        }
 
+    user.findOneBy({
+        column: "e_mail",
+        value: req.body.e_mail,
+        column_names: [
+            'id',
+            'first_name',
+            'last_name',
+            'e_mail',
+            'password'
+        ]
 
-    }).catch(error => {
-        logger.error(error)
-        server_error(res)
     })
+        .then(async result => {
+            const password_matched = await bcrypt.compare(req.body.password, result[0].password)
+
+            if (password_matched) {
+                delete result[0].password
+
+                successful_login(result, res, "token_xx")
+            } else {
+                unsuccessful(res, "E-mail and/or password field is wrong")
+            }
+        })
+        .catch(error => {
+            server_error(res)
+        })
 }

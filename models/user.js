@@ -1,27 +1,20 @@
 const connection = require('../db.js')
 const bcrypt = require("bcrypt")
+const logger = require("../logs/logger");
 
-const timestamps = true
-const soft_delete = true
+const parse_column_names = (column_names) => {
+    return column_names === undefined ? "*" : column_names.join(", ").toString()
+}
 
-const fields = [
-    'first_name',
-    'last_name',
-    'e_mail',
-    'password',
-    'phone',
-]
-
-const hidden = [
-    'password'
-]
-
-exports.findAll = async () => {
-    let sql = 'SELECT * FROM users'
+exports.findAll = async (input) => {
+    console.log(parse_column_names(input.column_names))
+    let sql = `SELECT ${parse_column_names(input.column_names)} FROM users`
+    console.log(sql)
 
     return new Promise((resolve, reject) => {
         connection.query(sql, (err, result) => {
             if (err) {
+                logger.error(err)
                 reject(err)
             } else {
                 resolve(result)
@@ -31,14 +24,14 @@ exports.findAll = async () => {
 }
 
 exports.findOneBy = async (input) => {
-    let sql = `SELECT * FROM users where ${input.column} = '${input.value}' LIMIT 1`
-console.log(sql)
+    let sql = `SELECT ${parse_column_names(input.column_names)} FROM users where ${input.column} = '${input.value}' LIMIT 1`
+
     return new Promise((resolve, reject) => {
         connection.query(sql, (err, result) => {
             if (err) {
+                logger.error(err)
                 reject(err)
             } else {
-                console.log(result)
                 resolve(result)
             }
         })
@@ -53,6 +46,7 @@ exports.create = async (values) => {
     return new Promise((resolve, reject) => {
         connection.query(sql, (err, result) => {
             if (err) {
+                logger.error(err)
                 reject(err)
             } else {
                 resolve(result)
