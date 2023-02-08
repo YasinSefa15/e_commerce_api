@@ -8,7 +8,7 @@ const api_routes = router
     .get('/', function (req, res) {
         res.send("Successful API route")
     })
-    .use('/auth/register', auth_router)
+    .use('/auth', auth_router)
     .use('/users', user_router)
 
 
