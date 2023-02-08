@@ -37,7 +37,7 @@ exports.login = (req, res) => {
     user.findOneBy({column: "e_mail", value: req.body.e_mail}).then(async result => {
         const password_matched = await bcrypt.compare(req.body.password, result[0].password)
         if (password_matched) {
-            successful_login([], res, "token_xx")
+            successful_login(result, res, "token_xx")
         } else {
             unsuccessful(res, "E-mail and/or password field is wrong")
         }
