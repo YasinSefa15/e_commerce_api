@@ -53,6 +53,13 @@ const successful_create = (res, message = "Successful") => {
     })
 }
 
+const not_found = (res) => {
+    res.status(HTTP_STATUS_CODES.NOT_FOUND).json({
+        "status_code": HTTP_STATUS_CODES.NOT_FOUND,
+        "message": "Not Found"
+    })
+}
+
 const server_error = (res) => {
     res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
         "status_code": HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -69,5 +76,6 @@ module.exports = {
     successful_login,
     successful_read,
     successful_create,
+    not_found,
     server_error
 }
