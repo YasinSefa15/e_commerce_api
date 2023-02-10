@@ -1,5 +1,13 @@
 const HTTP_STATUS_CODES = require("./http_status_codes");
 
+
+const too_many_request = (res) => {
+    res.status(HTTP_STATUS_CODES.TOO_MANY_REQUEST).json({
+        "status_code": HTTP_STATUS_CODES.TOO_MANY_REQUEST,
+        "message": "Too many requests, please try again later"
+    })
+}
+
 const token_required = (res) => {
     res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({
         "status_code": HTTP_STATUS_CODES.UNAUTHORIZED,
@@ -54,6 +62,7 @@ const server_error = (res) => {
 
 
 module.exports = {
+    too_many_request,
     token_required,
     invalid_token,
     unsuccessful,
