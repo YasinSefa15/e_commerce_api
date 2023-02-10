@@ -1,6 +1,20 @@
 const HTTP_STATUS_CODES = require("./http_status_codes");
 
-const successful_login = (data, res, message = "Logged in successfully", token) => {
+const token_required = (res) => {
+    res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({
+        "status_code": HTTP_STATUS_CODES.UNAUTHORIZED,
+        "message": "Token is required for this process"
+    })
+}
+
+const invalid_token = (res) => {
+    res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({
+        "status_code": HTTP_STATUS_CODES.UNAUTHORIZED,
+        "message": "Invalid token"
+    })
+}
+
+const successful_login = (data, res, token, message = "Logged in successfully") => {
     res.status(HTTP_STATUS_CODES.OK).json({
         "status_code": HTTP_STATUS_CODES.OK,
         "message": message,
@@ -40,6 +54,8 @@ const server_error = (res) => {
 
 
 module.exports = {
+    token_required,
+    invalid_token,
     unsuccessful,
     successful_login,
     successful_read,

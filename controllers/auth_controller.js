@@ -3,6 +3,7 @@ const {successful_create, server_error, successful_login, unsuccessful} = requir
 const {validate_or_throw_error} = require("../helpers/validation_helper")
 const Joi = require("joi")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken");
 
 exports.register = (req, res) => {
     const schema = Joi.object({
@@ -34,7 +35,6 @@ exports.login = (req, res) => {
 
     validate_or_throw_error(schema, req.body, res)
 
-
     user.findOneBy({
         column: "e_mail",
         value: req.body.e_mail,
@@ -53,7 +53,14 @@ exports.login = (req, res) => {
             if (password_matched) {
                 delete result[0].password
 
-                successful_login(result, res, "token_xx")
+                const token = jwt.sign(
+                    {user_id: 1},
+                    process.env.TOKEN_KEY,
+                    {
+                        expiresIn: "30d",
+                    });
+
+                successful_login(result, res, token)
             } else {
                 unsuccessful(res, "E-mail and/or password field is wrong")
             }
