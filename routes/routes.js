@@ -5,6 +5,9 @@ const auth_middleware = require("../middlewares/auth_middleware");
 const category_router = require("./modules/categories");
 
 const router = express.Router()
+const connection = require("../db");
+const logger = require("../logs/logger");
+const {MyError} = require("../helpers/error_by");
 
 const api_routes = router
     .get('/', function (req, res) {

@@ -18,6 +18,10 @@
     "mysql": "^2.18.1",
     "mysql-migrations": "^1.0.7",
     "nodemon": "^2.0.20",
+    "redis": "^4.6.4",
     "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
   }
 }

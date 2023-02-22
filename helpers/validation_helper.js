@@ -13,6 +13,14 @@ const validate_or_throw_error = function (schema, body, res) {
     }
 }
 
+const throw_error = function (res){
+    throw res.status(HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY).json({
+        "message": "Please check your form",
+        "errors": "idk"
+    })
+}
+
 module.exports = {
-    validate_or_throw_error
+    validate_or_throw_error,
+    throw_error
 }

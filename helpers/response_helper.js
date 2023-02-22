@@ -1,5 +1,6 @@
-const HTTP_STATUS_CODES = require("./http_status_codes");
-
+const HTTP_STATUS_CODES = require("./http_status_codes")
+const {stringify} = require("nodemon/lib/utils");
+require('dotenv').config({path: __dirname + '/../.env'})
 
 const too_many_request = (res) => {
     res.status(HTTP_STATUS_CODES.TOO_MANY_REQUEST).json({
@@ -60,11 +61,20 @@ const not_found = (res) => {
     })
 }
 
-const server_error = (res) => {
-    res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
-        "status_code": HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
-        "message": "An error occurred"
-    })
+const server_error = (res, err = []) => {
+    if (process.env.NODE_ENV === "development") {
+        res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            "status_code": HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+            "message": "An error occurred",
+            "error": err,
+            "stack": err.stack
+        })
+    } else {
+        res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            "status_code": HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+            "message": "An error occurred"
+        })
+    }
 }
 
 

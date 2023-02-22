@@ -1,0 +1,179 @@
+2023-02-18T01:07:03.659Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:10:15.752Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:13:23.148Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:14:18.192Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:15:42.204Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:16:00.273Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:16:17.024Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:19:00.051Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:20:40.319Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:21:20.228Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:24:19.547Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:24:57.495Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:25:00.052Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:25:11.380Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:27:03.766Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:28:01.318Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:28:13.216Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:29:19.623Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:29:39.753Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:30:08.060Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:30:58.344Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:31:00.140Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:31:03.476Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:31:16.583Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:31:56.596Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:31:58.186Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:32:18.396Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:32:29.820Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:32:44.082Z ER_BAD_FIELD_ERROR: Unknown column 'slugx' in 'where clause' 
+2023-02-18T01:32:55.202Z ER_BAD_FIELD_ERROR: Unknown column 'slugx' in 'where clause' 
+2023-02-18T01:33:11.588Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:34:36.307Z ER_BAD_FIELD_ERROR: Unknown column 'category_idx' in 'where clause' 
+2023-02-18T01:49:44.964Z ER_SP_DOES_NOT_EXIST: FUNCTION e_commerce_api.parse_conditions does not exist 
+2023-02-18T01:50:01.798Z ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where category_id '5' and category_id '7' and category_id '8'' at line 1 
+2023-02-18T01:50:03.778Z ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where category_id '5' and category_id '7' and category_id '8'' at line 1 
+2023-02-18T01:50:18.627Z ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where category_id =  '5' and category_id =  '7' and category_id =  '8'' at line 1 
+2023-02-18T01:50:19.812Z ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where category_id =  '5' and category_id =  '7' and category_id =  '8'' at line 1 
+2023-02-19T22:03:45.462Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:04:10.353Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:04:12.387Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:04:25.502Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:05:19.702Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:05:50.929Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:06:10.317Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:06:36.944Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:06:52.201Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:07:16.276Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:08:20.765Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:09:08.567Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:09:23.960Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:11:20.962Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:11:31.283Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:11:56.773Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:12:00.580Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:12:01.300Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:12:16.608Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:12:17.417Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.productsx' doesn't exist 
+2023-02-19T22:13:08.905Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:13:29.774Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:15:04.242Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:15:21.269Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:16:29.791Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:17:00.421Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:17:42.870Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:17:44.179Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:17:44.924Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:19:40.308Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:19:59.512Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:21:17.954Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:21:30.629Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:21:40.400Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:23:17.583Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:23:30.079Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:23:56.806Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:23:57.887Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:24:05.362Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-19T22:24:11.108Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T22:00:00.819Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T22:00:24.996Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T22:02:50.441Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T22:04:16.270Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T22:06:27.831Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T22:06:28.663Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T22:06:29.328Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T22:06:29.930Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T22:06:39.611Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:13:38.525Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:13:39.690Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:13:40.262Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:13:40.731Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:13:41.194Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:13:53.969Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:13:56.962Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:15:48.369Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:15:48.373Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:21.954Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:22.889Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:23.661Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:24.220Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:24.718Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:25.109Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:25.558Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:25.966Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:26.380Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:26.848Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:36.620Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:16:36.623Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:17:16.851Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:17:21.051Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:17:21.738Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:17:22.234Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:17:22.608Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:17:23.057Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:17:23.436Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:17:23.813Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:17:24.272Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:17:24.663Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:21:17.445Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:21:18.384Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:21:28.538Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:21:29.371Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:21:46.916Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:21:47.679Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:22:00.470Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:25:09.340Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:25:10.072Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:25:30.488Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:25:58.097Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:25:59.468Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:26:32.280Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:26:46.297Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:26:47.735Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-20T23:30:07.290Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:28:10.175Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:28:13.636Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:31:15.896Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:31:25.156Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:33:11.579Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:33:22.265Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:34:27.112Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:35:21.104Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:35:37.326Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:36:07.655Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:36:15.143Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:36:31.039Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:40:57.543Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:41:39.634Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:41:57.300Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:42:41.869Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:43:29.125Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:43:36.609Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:43:59.896Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:44:06.047Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:45:01.621Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:45:06.940Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:45:18.322Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:45:48.148Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:46:32.213Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:47:23.665Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:49:13.762Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:49:22.061Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:51:21.379Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:53:51.850Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:54:17.652Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:54:31.838Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:55:51.117Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:55:56.764Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:56:02.127Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:58:14.668Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:58:22.392Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:58:29.519Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:59:00.457Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:59:08.712Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:59:14.384Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T15:59:53.420Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T16:00:03.033Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T16:02:40.466Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T16:05:49.662Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
+2023-02-22T16:06:23.963Z ER_NO_SUCH_TABLE: Table 'e_commerce_api.categoriesx' doesn't exist 
