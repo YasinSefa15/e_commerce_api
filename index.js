@@ -2,11 +2,12 @@ const express = require('express')
 const api_routes = require("./routes/routes");
 const rate_limiter = require("./middlewares/rate_limiter_middleware");
 const {not_found} = require("./helpers/response_helper");
-const {client,connect,disconnect} = require('./redis')
+const {connect, disconnect, client} = require('./redis')
 require('dotenv').config()
 
+connect().then(result => {
+})
 
-connect().then(r => {})
 
 const app = express()
 

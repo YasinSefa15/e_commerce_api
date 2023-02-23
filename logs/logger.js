@@ -1,7 +1,7 @@
 const {createLogger, transports, format} = require('winston');
 
 const custom_format = format.combine(format.timestamp(), format.printf((info) => {
-    return info.timestamp + " " + info.message + " "
+    return info.timestamp + " " + info.stack
 }))
 
 const logger = createLogger({
