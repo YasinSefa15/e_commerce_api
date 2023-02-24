@@ -1,10 +1,8 @@
 const connection = require("../db");
 const logger = require("../logs/logger");
 const {client, connection_status, redis_status} = require("../redis");
+const {parse_column_names} = require("../helpers/query_helper");
 
-const parse_column_names = (column_names) => {
-    return column_names === undefined ? "*" : column_names.join(", ").toString()
-}
 
 exports.categories_list = (category_result) => {
     let categories_list = {}

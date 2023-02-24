@@ -1,10 +1,13 @@
 const express = require("express");
-const user_controller = require('../../controllers/user_controller')
+const cart_controller = require('../../controllers/cart_controller')
 
-const user_router = express.Router()
+const cart_router = express.Router()
 
-//lists all the users
-user_router.get('/', user_controller.read)
+//lists the cart items with the token related user
+cart_router.get('/', cart_controller.view)
+cart_router.post('/', cart_controller.create)
+cart_router.delete('/', cart_controller.delete)
+cart_router.put('/', cart_controller.update)
 
 
-module.exports = user_router
+module.exports = cart_router

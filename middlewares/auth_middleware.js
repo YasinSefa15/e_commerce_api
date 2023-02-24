@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const {token_required, invalid_token} = require("../helpers/response_helper");
+const auth_token = require("../models/auth_token");
 
 const auth_middleware = (req, res, next) => {
     const config = process.env
@@ -8,15 +9,17 @@ const auth_middleware = (req, res, next) => {
 
     if (!token) {
         token_required(res)
-    }
+    } else {
+        try {
+            req.auth = jwt.verify(token, config.TOKEN_KEY)
 
-    try {
-        req.auth_id = jwt.verify(token, config.TOKEN_KEY);
-    } catch (err) {
-        invalid_token(res)
-    }
+            auth_token.update(req.auth.uuid)
 
-    return next();
+            return next()
+        } catch (err) {
+            invalid_token(res)
+        }
+    }
 }
 
 

@@ -4,6 +4,8 @@ const {validate_or_throw_error} = require("../helpers/validation_helper")
 const Joi = require("joi")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
+const auth_token = require("../models/auth_token");
+const {v4: uuidv4} = require('uuid');
 
 exports.register = (req, res) => {
     const schema = Joi.object({
@@ -45,20 +47,32 @@ exports.login = (req, res) => {
             'e_mail',
             'password'
         ]
-
     })
         .then(async result => {
+            if (result[0] === undefined) {
+                return unsuccessful(res, "Email and/or password is wrong")
+            }
+
             const password_matched = await bcrypt.compare(req.body.password, result[0].password)
 
             if (password_matched) {
                 delete result[0].password
 
+                const uuid = uuidv4()
+
+                await auth_token.create({
+                    uuid: uuid,
+                    user_id: result[0].id
+                })
                 const token = jwt.sign(
-                    {user_id: 1},
+                    {
+                        user_id: 1,
+                        uuid: uuid
+                    },
                     process.env.TOKEN_KEY,
                     {
                         expiresIn: "30d",
-                    });
+                    })
 
                 successful_login(result, res, token)
             } else {
@@ -66,6 +80,6 @@ exports.login = (req, res) => {
             }
         })
         .catch(error => {
-            server_error(res)
+            server_error(res, error)
         })
 }

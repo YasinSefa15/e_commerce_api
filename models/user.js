@@ -1,10 +1,8 @@
 const connection = require('../db.js')
 const bcrypt = require("bcrypt")
 const logger = require("../logs/logger");
+const {parse_column_names} = require("../helpers/query_helper");
 
-const parse_column_names = (column_names) => {
-    return column_names === undefined ? "*" : column_names.join(", ").toString()
-}
 
 exports.findAll = async (input) => {
     let sql = `SELECT ${parse_column_names(input.column_names)} FROM users`

@@ -47,6 +47,14 @@ const successful_read = (data, res, message = "Successful") => {
     })
 }
 
+const successful_delete = (data, res, message = "Successful") => {
+    res.status(HTTP_STATUS_CODES.OK).json({
+        "status_code": HTTP_STATUS_CODES.OK,
+        "message": message,
+        "affected_rows": data
+    })
+}
+
 const successful_create = (res, message = "Successful") => {
     res.status(HTTP_STATUS_CODES.CREATED).json({
         "status_code": HTTP_STATUS_CODES.CREATED,
@@ -89,5 +97,6 @@ module.exports = {
     successful_read,
     successful_create,
     not_found,
-    server_error
+    server_error,
+    successful_delete
 }
