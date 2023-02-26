@@ -19,10 +19,10 @@ exports.create = async (values) => {
 }
 
 exports.findBy = async (input) => {
-    let sql = `SELECT ${parse_column_names(input.column_names)} FROM carts where ${input.column} = '${input.value}'`
+    let sql = `SELECT * FROM carts inner join products on products.id = carts.product_id where user_id = ? `
 
     return new Promise((resolve, reject) => {
-        connection.query(sql, (err, result) => {
+        connection.query(sql, [input.value], (err, result) => {
             if (err) {
                 logger.error(err)
                 reject(err)

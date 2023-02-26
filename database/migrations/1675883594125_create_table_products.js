@@ -6,6 +6,7 @@ module.exports = {
         "    title       VARCHAR(25)  NOT NULL,\n" +
         "    slug        VARCHAR(28)  NOT NULL UNIQUE,\n" +
         "    description VARCHAR(255) NOT NULL,\n" +
+        "    price       INT UNSIGNED NOT NULL,\n" +
         "    quantity    INT UNSIGNED NOT NULL default 0,\n" +
         "    created_at  TIMESTAMP    NOT NULL,\n" +
         "    updated_at  TIMESTAMP,\n" +

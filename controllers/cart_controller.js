@@ -1,5 +1,5 @@
 const {
-    successful_create, successful_read, server_error, successful_delete
+    successful_create, successful_read, server_error, update_or_delete_response
 } = require("../helpers/response_helper");
 const cart = require("../models/cart");
 const Joi = require("joi");
@@ -41,16 +41,15 @@ exports.update = async (req, res) => {
 
     await cart.update(req)
         .then((result) => {
-            successful_create(res, "Quantity is updated")
+            update_or_delete_response(result['affectedRows'], res)
         })
         .catch((err) => {
             server_error(res, err)
         })
 }
 
-exports.view = async (req, res) => {
-    await cart.findBy({
-        column: 'user_id',
+exports.view = (req, res) => {
+    cart.findBy({
         value: req.auth.user_id
     })
         .then((result) => {
@@ -75,7 +74,7 @@ exports.delete = async (req, res) => {
 
     await cart.delete(req)
         .then((result) => {
-            successful_delete(result, res)
+            update_or_delete_response(result['affectedRows'], res)
         })
         .catch((err) => {
             server_error(res, err)

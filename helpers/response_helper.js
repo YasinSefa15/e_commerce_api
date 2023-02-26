@@ -47,19 +47,25 @@ const successful_read = (data, res, message = "Successful") => {
     })
 }
 
-const successful_delete = (data, res, message = "Successful") => {
-    res.status(HTTP_STATUS_CODES.OK).json({
-        "status_code": HTTP_STATUS_CODES.OK,
-        "message": message,
-        "affected_rows": data
-    })
-}
-
 const successful_create = (res, message = "Successful") => {
     res.status(HTTP_STATUS_CODES.CREATED).json({
         "status_code": HTTP_STATUS_CODES.CREATED,
         "message": message
     })
+}
+
+const update_or_delete_response = (affected_rows_count, res) => {
+    if (affected_rows_count) {
+        res.status(HTTP_STATUS_CODES.OK).json({
+            "status_code": HTTP_STATUS_CODES.OK,
+            "message": "Successfully updated"
+        })
+    } else {
+        res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({
+            "status_code": HTTP_STATUS_CODES.BAD_REQUEST,
+            "message": "No record found to update"
+        })
+    }
 }
 
 const not_found = (res) => {
@@ -94,9 +100,9 @@ module.exports = {
     invalid_token,
     unsuccessful,
     successful_login,
+    update_or_delete_response,
     successful_read,
     successful_create,
     not_found,
-    server_error,
-    successful_delete
+    server_error
 }

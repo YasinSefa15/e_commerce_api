@@ -1,7 +1,19 @@
 const connection = require("../db")
-const {parse_column_names, parse_conditions} = require("../helpers/query_helper")
+const {parse_column_names, parse_conditions, current_timestamp} = require("../helpers/query_helper")
 
+exports.create = async (input) => {
+    let sql = `insert into products (category_id,title,price,slug,description,quantity,created_at) values (?,?,?,?,?,?,?)`
 
+    return new Promise((resolve, reject) => {
+        connection.query(sql, [input.category_id, input.title, input.price, input.slug, input.description, input.quantity, current_timestamp], (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+}
 
 
 exports.findBy = async (input) => {

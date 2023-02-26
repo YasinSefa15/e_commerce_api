@@ -20,6 +20,6 @@ exports.create = async (values) => {
 
 exports.update = (uuid) => {
     connection.query('UPDATE auth_tokens SET last_used_at = ? WHERE uuid = ?', [current_timestamp, uuid], function (error, results, fields) {
-        console.log(error)
+        logger.error(error)
     })
 }

@@ -15,6 +15,7 @@
     "express-rate-limit": "^6.7.0",
     "joi": "^17.7.0",
     "jsonwebtoken": "^9.0.0",
+    "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
     "mysql-migrations": "^1.0.7",
     "nodemon": "^2.0.20",
