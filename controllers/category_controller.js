@@ -1,7 +1,7 @@
 const {
     server_error,
     unsuccessful,
-    successful_read, successful_create
+    successful_read, successful_create, update_or_delete_response
 } = require("../helpers/response_helper");
 const {validate_or_throw_error, validate_schema_in_async} = require("../helpers/validation_helper")
 const Joi = require("joi")
@@ -13,18 +13,16 @@ const {client} = require("../redis");
 
 exports.create = async (req, res) => {
     const schema = Joi.object({
-        parent_id: Joi.number().integer().min(1).required(),
+        parent_id: Joi.number().integer().min(1),
         title: Joi.string().min(3).max(30).required(),
     })
 
     const validate = validate_schema_in_async(schema, req.body, res)
 
-    if (validate){
-        return validat
+    if (validate) {
+        return validate
     }
 
-
-    //create here
     category.create({
         parent_id: req.body.parent_id,
         title: req.body.title,
@@ -51,11 +49,19 @@ exports.create = async (req, res) => {
 }
 
 exports.read = async (req, res) => {
+    //first we need to check if the cache is available
+    const categories_cache = await client.get('Categories')
+
+    if (categories_cache) {
+        successful_read(JSON.parse(categories_cache), res, "Categories listed")
+        return
+    }
+
+    //if the cache is not available, we need to fetch the data from the database
     category.all({
         column_names: ['id', 'parent_id', 'title', 'slug']
     })
         .then(async (category_result) => {
-            //const value = await client.get('key')
 
             successful_read(categories_list(category_result), res, "Categories listed")
         })
@@ -71,16 +77,18 @@ exports.view = (req, res) => {
         value: req.params.slug,
         column_names: ['id', 'parent_id', 'slug']
     })
-        .then((category_result) => {
-            //console.log("category result ")
-            //console.log(category_result)
+        .then((categories_ids) => {
 
+            if (categories_ids.length === 0) {
+                successful_read([], res, "No category found")
+                return
+            }
             product.findBy({
                 column: 'category_id',
                 conditions: {
                     'category_id': {
                         'condition': 'or',
-                        'values': category_result
+                        'values': categories_ids
                     },
                 }
             })
@@ -95,4 +103,78 @@ exports.view = (req, res) => {
         .catch((err) => {
             server_error(res, err)
         })
+}
+
+exports.update = (req, res) => {
+    const schema = Joi.object({
+        id: Joi.number().integer().min(1).required(),
+        parent_id: Joi.number().integer().min(1).less(Joi.ref('id')),
+        title: Joi.string().min(3).max(30).required()
+    })
+
+    const validate = validate_schema_in_async(schema, req.body, res)
+
+    if (validate) {
+        return validate
+    }
+
+    //if the cache is not available, we need to fetch the data from the database
+    category.update(req.body)
+        .then(async (result) => {
+            category.all({
+                column_names: ['id', 'parent_id', 'title', 'slug']
+            })
+                .then(async (categories_db) => {
+                    await client.set('Categories', JSON.stringify(categories_list(categories_db)))
+                    console.log("categories_db")
+                    console.log(categories_db)
+                    update_or_delete_response(result['affectedRows'], res)
+                })
+
+        })
+        .catch((err) => {
+            server_error(res, err)
+        })
+}
+
+//TODO:NOT SOFT DELETE
+exports.delete = (req, res) => {
+    const schema = Joi.object({
+        id: Joi.number().integer().min(1).required()
+    })
+
+    const validate = validate_schema_in_async(schema, req.body, res)
+
+    if (validate) {
+        return validate
+    }
+
+    category.all({
+        column_names: ['id', 'parent_id', 'title', 'slug']
+    })
+        .then(async (categories_db) => {
+            //if the cache is not available, we need to fetch the data from the database
+            category.delete({
+                id: req.body.id,
+                all_categories: categories_db
+            })
+                .then(async (resolved, final_category_list) => {
+                    if (resolved.result['affectedRows'] === 0) {
+                        unsuccessful(res, "Category not found")
+                        return
+                    }
+                        console.log("xx")
+
+                    await client.set('Categories', JSON.stringify(categories_list(resolved.final_category_list)))
+                    update_or_delete_response(resolved.result['affectedRows'], res)
+
+                })
+                .catch((err) => {
+                    server_error(res, err)
+                })
+
+
+        })
+
+
 }

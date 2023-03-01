@@ -3,21 +3,25 @@ module.exports.parse_column_names = (column_names) => {
 }
 
 module.exports.parse_conditions = (conditions) => {
-    let query_condition = 'where'
+    let query_condition = 'where ('
     if (conditions !== undefined) {
 
         //traverse in conditions object by key
         for (const key in conditions) {
             //accessing values
+            //console.log("key: " + key)
             if (conditions.hasOwnProperty(key)) {
-                //console.log(conditions[key]['condition'])
+                //console.log(conditions[key])
                 //console.log(conditions[key]['values'])
 
+                //console.log(typeof conditions[key]['values'])
                 //creating query string
                 conditions[key]['values'].forEach((value) => {
                     query_condition += " " + key + " = " + value + " "
                     if (conditions[key]['values'].length - 1 !== conditions[key]['values'].indexOf(value)) {
                         query_condition += conditions[key]['condition']
+                    } else {
+                        query_condition += ')'
                     }
                 })
                 //console.log(`${key}: ${conditions[key]}`);
@@ -25,7 +29,7 @@ module.exports.parse_conditions = (conditions) => {
         }
     }
 
-    //console.log(query_condition)
+    console.log(query_condition)
 
     return query_condition
 }

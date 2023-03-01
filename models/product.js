@@ -19,6 +19,8 @@ exports.create = async (input) => {
 exports.findBy = async (input) => {
     let sql = `SELECT ${parse_column_names(input.column_names)} FROM products ${parse_conditions(input.conditions)}`
 
+    console.log(typeof input.conditions)
+
     return new Promise((resolve, reject) => {
         connection.query(sql, (err, result) => {
             if (err) {
