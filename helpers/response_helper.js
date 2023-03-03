@@ -58,12 +58,12 @@ const update_or_delete_response = (affected_rows_count, res) => {
     if (affected_rows_count) {
         res.status(HTTP_STATUS_CODES.OK).json({
             "status_code": HTTP_STATUS_CODES.OK,
-            "message": "Successfully updated"
+            "message": "Successful"
         })
     } else {
         res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({
             "status_code": HTTP_STATUS_CODES.BAD_REQUEST,
-            "message": "No record found to update"
+            "message": "No record found"
         })
     }
 }

@@ -1,11 +1,46 @@
 const connection = require("../db")
 const {parse_column_names, parse_conditions, current_timestamp} = require("../helpers/query_helper")
+const logger = require("../logs/logger");
+
+unique_slug = async (title) => {
+    let result_slug = ''
+    let sql = `select id, slug from products where title = ? order by updated_at desc limit 1`
+
+    await new Promise(async (resolve, reject) => {
+        connection.query(sql, [title], (err, result,) => {
+            if (err) {
+                logger.error(err)
+                //console.log(err)
+                result_slug = title.toLowerCase().replace(' ', '-') + '-' + 1
+            } else {
+                if (result[0]) {
+                    const last_slug = result[0].slug.substring(result[0].slug.lastIndexOf('-') + 1)
+
+                    if (!isNaN(parseInt(last_slug))) {
+                        console.log("last slug is a number")
+                        result_slug = title.toLowerCase().replace(' ', '-') + '-' + (parseInt(last_slug) + 1)
+                    } else {
+                        result_slug = title.toLowerCase().replace(' ', '-') + '-' + 1
+                    }
+
+                } else {
+                    console.log("last slug is not a number")
+                    result_slug = title.toLowerCase().replace(' ', '-')
+                }
+            }
+            resolve()
+        }, [title])
+    })
+
+    return result_slug
+}
 
 exports.create = async (input) => {
-    let sql = `insert into products (category_id,title,price,slug,description,quantity,created_at) values (?,?,?,?,?,?,?)`
+    let sql = `insert into products (category_id,title,price,slug,description,quantity,created_at,updated_at) values (?,?,?,?,?,?,?,?)`
 
-    return new Promise((resolve, reject) => {
-        connection.query(sql, [input.category_id, input.title, input.price, input.slug, input.description, input.quantity, current_timestamp], (err, result) => {
+    return new Promise(async (resolve, reject) => {
+        const slug = await unique_slug(input.title)
+        connection.query(sql, [input.category_id, input.title, input.price, slug, input.description, input.quantity, current_timestamp,current_timestamp], (err, result) => {
             if (err) {
                 reject(err)
             } else {

@@ -137,7 +137,7 @@ exports.update = (req, res) => {
         })
 }
 
-//TODO:NOT SOFT DELETE
+
 exports.delete = (req, res) => {
     const schema = Joi.object({
         id: Joi.number().integer().min(1).required()
@@ -159,13 +159,10 @@ exports.delete = (req, res) => {
                 all_categories: categories_db
             })
                 .then(async (resolved, final_category_list) => {
-                    if (resolved.result['affectedRows'] === 0) {
-                        unsuccessful(res, "Category not found")
-                        return
+                    if (resolved.result['affectedRows'] !== 0) {
+                        await client.set('Categories', JSON.stringify(categories_list(resolved.final_category_list)))
                     }
-                        console.log("xx")
 
-                    await client.set('Categories', JSON.stringify(categories_list(resolved.final_category_list)))
                     update_or_delete_response(resolved.result['affectedRows'], res)
 
                 })
