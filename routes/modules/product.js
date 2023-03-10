@@ -22,6 +22,7 @@ const product_router = express.Router()
 //maybe filtering on read operation
 //product_router.get('/', product_controller.read)
 product_router.post('/', upload.array('files', 3), product_controller.create)
+product_router.put('/', upload.array('files', 3), product_controller.update)
 product_router.get('/:slug', product_controller.view)
 
 

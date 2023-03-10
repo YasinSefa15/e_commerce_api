@@ -1,6 +1,6 @@
 const connection = require("../db");
 const logger = require("../logs/logger");
-const {parse_column_names, current_timestamp} = require("../helpers/query_helper");
+const {parse_column_names, current_timestamp, parse_conditions, bind} = require("../helpers/query_helper");
 
 
 //array can send and insert all together
@@ -20,7 +20,7 @@ exports.create = async (values) => {
 }
 
 exports.findBy = async (input) => {
-    let sql = `SELECT * FROM carts inner join products on products.id = carts.product_id where user_id = ? `
+    let sql = `SELECT * FROM images ${parse_conditions(input.conditions)} and deleted_at is null`
 
     return new Promise((resolve, reject) => {
         connection.query(sql, [input.value], (err, result) => {
@@ -28,7 +28,15 @@ exports.findBy = async (input) => {
                 logger.error(err)
                 reject(err)
             } else {
-                resolve(result)
+                const binded = bind({
+                    source: input.result,
+                    with: result,
+                    with_key: 'images',
+                    foreign_key: 'product_id',
+                    key: 'id'
+                })
+
+                resolve(binded)
             }
         })
     })

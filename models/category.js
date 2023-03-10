@@ -105,7 +105,7 @@ exports.create = async (input) => {
 }
 
 exports.findBy = async (input) => {
-    let sql = `SELECT ${parse_column_names(input.column_names)} FROM categories ` //where ${input.column} = '${input.value}'
+    let sql = `SELECT ${parse_column_names(input.column_names)} FROM categories where deleted_at is null` //where ${input.column} = '${input.value}'
 
     return new Promise((resolve, reject) => {
         connection.query(sql, (err, result) => {
@@ -226,7 +226,8 @@ exports.delete = async (input) => {
             } else {
                 resolve({
                     result,
-                    final_category_list
+                    final_category_list,
+                    subcategories_ids
                 })
             }
         })

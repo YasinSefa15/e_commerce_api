@@ -9,6 +9,7 @@ const category = require("../models/category")
 const product = require("../models/product")
 const {categories_list} = require("../models/category");
 const {client} = require("../redis");
+const images = require("../models/image");
 
 
 exports.create = async (req, res) => {
@@ -84,16 +85,33 @@ exports.view = (req, res) => {
                 return
             }
             product.findBy({
+                column_names: ['products.id', 'products.title', 'products.slug', 'products.price', 'products.description', 'products.category_id',
+                    'products.quantity'],
                 column: 'category_id',
                 conditions: {
                     'category_id': {
                         'condition': 'or',
                         'values': categories_ids
-                    },
+                    }
                 }
             })
                 .then((result) => {
-                    successful_read(result, res, 'All the products listed with given category')
+                    images.findBy({
+                        conditions: {
+                            'product_id': {
+                                'condition': 'or',
+                                'values': result.map((product) => {
+                                    return product.id
+                                })
+                            },
+                        },
+                        result: result,
+                        bind: result
+                    }).then((images) => {
+                        //console.log(images)
+                        //console.log(result)
+                        successful_read(images, res, 'All the products listed with given category')
+                    })
                 })
                 .catch((err) => {
                     server_error(res, err)
@@ -161,6 +179,15 @@ exports.delete = (req, res) => {
                 .then(async (resolved, final_category_list) => {
                     if (resolved.result['affectedRows'] !== 0) {
                         await client.set('Categories', JSON.stringify(categories_list(resolved.final_category_list)))
+                        product.delete({
+                            conditions: {
+                                'category_id': {
+                                    'condition': 'or',
+                                    'values': resolved.subcategories_ids
+                                }
+                            }
+                        }).then((result) => {
+                        })
                     }
 
                     update_or_delete_response(resolved.result['affectedRows'], res)

@@ -1,3 +1,4 @@
+const {remove} = require("winston");
 module.exports.parse_column_names = (column_names) => {
     return column_names === undefined ? "*" : column_names.join(", ").toString()
 }
@@ -38,4 +39,28 @@ module.exports.current_timestamp = {
     toSqlString: function () {
         return 'CURRENT_TIMESTAMP()';
     }
+}
+
+exports.bind = (input) => {
+    //input.source
+    //input with
+    //input key name
+    //foreign key
+    let result = {}
+
+    input.source.forEach((source) => {
+        result[source[input.key]] = source
+        result[source[input.key]][input.with_key] = []
+
+        input.with.forEach((related_value) => {
+            //console.log(source[input.key] + " " + related_value[input.foreign_key])
+            if (source[input.key] === related_value[input.foreign_key]) {
+                //can be optimized, done related value can be removed from with object
+                result[source[input.key]][input.with_key].push({related_value})
+
+            }
+        })
+    })
+
+    return result
 }

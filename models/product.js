@@ -40,7 +40,39 @@ exports.create = async (input) => {
 
     return new Promise(async (resolve, reject) => {
         const slug = await unique_slug(input.title)
-        connection.query(sql, [input.category_id, input.title, input.price, slug, input.description, input.quantity, current_timestamp,current_timestamp], (err, result) => {
+        connection.query(sql, [input.category_id, input.title, input.price, slug, input.description, input.quantity, current_timestamp, current_timestamp], (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+}
+
+exports.delete = async (input) => {
+    let sql = `update products set deleted_at = ? ${parse_conditions(input.conditions)} and (deleted_at is null) `
+    //let sql = `delete from categories where id = ? `
+    console.log(sql)
+
+    return new Promise(async (resolve, reject) => {
+        connection.query(sql, [current_timestamp], (err, result) => {
+            if (err) {
+                logger.error(err)
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+}
+
+exports.update = async (input) => {
+    let sql = `update products set category_id = ?, title = ?, price = ?, description = ?, quantity = ?, updated_at = ? where category_id = ?`
+
+    return new Promise(async (resolve, reject) => {
+        const slug = await unique_slug(input.title)
+        connection.query(sql, [input.category_id, input.title, input.price, slug, input.description, input.quantity, current_timestamp, current_timestamp], (err, result) => {
             if (err) {
                 reject(err)
             } else {
@@ -51,10 +83,10 @@ exports.create = async (input) => {
 }
 
 
+//Under categories, all products will be returned; caterogy controller
 exports.findBy = async (input) => {
-    let sql = `SELECT ${parse_column_names(input.column_names)} FROM products ${parse_conditions(input.conditions)}`
-
-    console.log(typeof input.conditions)
+    let sql = `SELECT ${parse_column_names(input.column_names)} FROM products inner join categories on categories.id = products.category_id  ${parse_conditions(input.conditions)} and categories.deleted_at is null
+        and products.deleted_at is null`
 
     return new Promise((resolve, reject) => {
         connection.query(sql, (err, result) => {
