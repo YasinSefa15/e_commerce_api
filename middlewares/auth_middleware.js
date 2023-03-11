@@ -5,11 +5,13 @@ const auth_token = require("../models/auth_token");
 const auth_middleware = (req, res, next) => {
     const config = process.env
 
-    const token = req.headers["x-access-token"]
+    let token = req.headers["authorization"]
 
     if (!token) {
         token_required(res)
     } else {
+        token = token.split(" ")[1]
+
         try {
             req.auth = jwt.verify(token, config.TOKEN_KEY)
 
@@ -21,6 +23,5 @@ const auth_middleware = (req, res, next) => {
         }
     }
 }
-
 
 module.exports = auth_middleware

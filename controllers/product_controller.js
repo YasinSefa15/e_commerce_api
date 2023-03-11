@@ -51,6 +51,8 @@ exports.create = (req, res) => {
         })
 }
 
+//ND
+//Updating product with images
 exports.update = (req, res) => {
     const schema = Joi.object({
         old_category_id: Joi.number().required(),
@@ -65,7 +67,7 @@ exports.update = (req, res) => {
 
     const body = req.body
 
-    product.create({
+    product.update({
         category_id: body.category_id,
         title: body.title,
         description: body.description,
@@ -96,11 +98,15 @@ exports.update = (req, res) => {
         })
 }
 
-exports.read = (req, res) => {
+//ND
+//Deleting product with images
+exports.delete = (req, res) => {
     console.log("product read in")
     successful_read([], res)
 }
 
+//ND
+//Product details
 exports.view = async (req, res) => {
     const product_result = await product.findOneBy({
         column: 'slug',
