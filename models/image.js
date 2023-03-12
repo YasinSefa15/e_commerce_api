@@ -21,7 +21,7 @@ exports.create = async (values) => {
 
 exports.findBy = async (input) => {
     let sql = `SELECT * FROM images ${parse_conditions(input.conditions)} and deleted_at is null`
-
+    console.log(sql)
     return new Promise((resolve, reject) => {
         connection.query(sql, [input.value], (err, result) => {
             if (err) {

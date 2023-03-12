@@ -1,5 +1,8 @@
 const connection = require("../db")
-const {parse_column_names, parse_conditions, current_timestamp} = require("../helpers/query_helper")
+const {
+    parse_column_names, parse_conditions, current_timestamp,
+    parse_nested_conditions, parse_multiple_conditions
+} = require("../helpers/query_helper")
 const logger = require("../logs/logger");
 
 unique_slug = async (title) => {
@@ -106,6 +109,40 @@ exports.findOneBy = async (input) => {
     return new Promise((resolve, reject) => {
         connection.query(sql, (err, result) => {
             if (err) {
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+}
+
+exports.is_valid = (input) => {
+    let sql = `select sum(price) as total_price,count(*)  as count from products ${parse_nested_conditions(input.conditions)} and deleted_at is null`
+
+    return new Promise((resolve, reject) => {
+        connection.query(sql, (err, result) => {
+            if (err) {
+                logger.error(err)
+                reject(err)
+            } else {
+                if (result[0].count === 0) {
+                    reject(err)
+                }
+                //console.log("result[0].total_price", result[0].total_price)
+                resolve(result)
+            }
+        })
+    })
+}
+
+exports.give_order = (input) => {
+    let sql = parse_multiple_conditions(input.conditions)
+
+    return new Promise((resolve, reject) => {
+        connection.query(sql, (err, result) => {
+            if (err) {
+                logger.error(err)
                 reject(err)
             } else {
                 resolve(result)

@@ -49,3 +49,21 @@ exports.delete = (input) => {
         })
     })
 }
+
+exports.is_valid = (input) => {
+    let sql = `select count(*) as count from addresses where id = ? and user_id = ? and deleted_at is null`
+
+    return new Promise((resolve, reject) => {
+        connection.query(sql, [input.id, input.user_id], (err, result) => {
+            if (err) {
+                logger.error(err)
+                reject(err)
+            } else {
+                if (result[0].count === 0){
+                    reject(0)
+                }
+                resolve(result)
+            }
+        })
+    })
+}
