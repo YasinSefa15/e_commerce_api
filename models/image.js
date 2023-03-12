@@ -1,7 +1,8 @@
 const connection = require("../db");
 const logger = require("../logs/logger");
 const {parse_column_names, current_timestamp, parse_conditions, bind} = require("../helpers/query_helper");
-
+require('dotenv').config({path: __dirname + '/../.env'})
+const full_url = "http://" + process.env.HOST + ":" + process.env.PORT + "/"
 
 //array can send and insert all together
 exports.create = async (values) => {
@@ -20,10 +21,10 @@ exports.create = async (values) => {
 }
 
 exports.findBy = async (input) => {
-    let sql = `SELECT * FROM images ${parse_conditions(input.conditions)} and deleted_at is null`
+    let sql = `SELECT type,product_id, CONCAT(?,'',file_path) as file_path,order_of FROM images ${parse_conditions(input.conditions)} and deleted_at is null`
     console.log(sql)
     return new Promise((resolve, reject) => {
-        connection.query(sql, [input.value], (err, result) => {
+        connection.query(sql, [full_url, input.value], (err, result) => {
             if (err) {
                 logger.error(err)
                 reject(err)
