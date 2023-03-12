@@ -4,6 +4,7 @@ const {
 const cart = require("../models/cart");
 const Joi = require("joi");
 const {validate_schema_in_async} = require("../helpers/validation_helper");
+const image = require("../models/image");
 
 exports.create = async (req, res) => {
     const schema = Joi.object({
@@ -53,7 +54,22 @@ exports.view = (req, res) => {
         value: req.auth.user_id
     })
         .then((result) => {
-            successful_read(result, res)
+            //console.log(result)
+            image.findBy({
+                conditions: {
+                    'product_id': {
+                        'condition': 'or',
+                        'values': result.map((product) => {
+                            return product.id
+                        })
+                    },
+                },
+                result: result,
+                bind: result
+            }).then((images) => {
+                //console.log("images", images)
+                successful_read(images, res)
+            })
         })
         .catch((err) => {
             server_error(res, err)

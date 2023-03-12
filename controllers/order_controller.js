@@ -7,6 +7,7 @@ const address = require("../models/address");
 const product = require("../models/product");
 const ordered_products = require("../models/ordered_products");
 const {current_timestamp} = require("../helpers/query_helper");
+const cart = require("../models/cart");
 
 
 //ordered_items will be sent as an array of object with quantity and product_id
@@ -93,6 +94,20 @@ exports.create = async (req, res) => {
         })
         .catch((err) => {
             console.log(err)
+        })
+
+    cart.delete_all({
+        conditions: {
+            'info': {
+                "user_id": req.auth.user_id,
+                "product_ids": req.body.products.map((product) => {
+                    return product.product_id
+                }),
+            },
+        }
+    })
+        .then((result) => {
+
         })
 
     order.create({

@@ -86,6 +86,7 @@ exports.parse_multiple_conditions = (conditions) => {
                 const search_column = key.split(",")[1]
                 if (conditions.hasOwnProperty(key)) {
                     for (let i = 0; i < conditions[key]["0.values"].length; i++) {
+                        //todo and or or ?
                         if (!conditions[key]["updated_at"] || conditions[key]["updated_at"] !== false) {
                             query_condition += query_condition += `update ${conditions[key].table} set ${updatable_column} = ${updatable_column} - ${conditions[key]["0.values"][i]} ,updated_at = CURRENT_TIMESTAMP() where ${search_column} = ${conditions[key]["1.values"][i]}; `
                         } else {
@@ -149,7 +150,7 @@ exports.bind = (input) => {
             //console.log(source[input.key] + " " + related_value[input.foreign_key])
             if (source[input.key] === related_value[input.foreign_key]) {
                 //can be optimized, done related value can be removed from with object
-                result[source[input.key]][input.with_key].push({related_value})
+                result[source[input.key]][input.with_key].push(related_value)
 
             }
         })

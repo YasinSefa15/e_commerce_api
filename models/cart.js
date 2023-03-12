@@ -1,6 +1,6 @@
 const connection = require("../db");
 const logger = require("../logs/logger");
-const {parse_column_names} = require("../helpers/query_helper");
+const {parse_column_names, parse_multiple_conditions} = require("../helpers/query_helper");
 
 
 exports.create = async (values) => {
@@ -19,7 +19,7 @@ exports.create = async (values) => {
 }
 
 exports.findBy = async (input) => {
-    let sql = `SELECT * FROM carts inner join products on products.id = carts.product_id where user_id = ? `
+    let sql = `SELECT carts.quantity, products.id, products.quantity as product_quantity, products.title, products.slug FROM carts inner join products on products.id = carts.product_id where user_id = ? `
 
     return new Promise((resolve, reject) => {
         connection.query(sql, [input.value], (err, result) => {
@@ -57,4 +57,27 @@ exports.delete = (req) => {
             }
         })
     })
+}
+
+exports.delete_all = (input) => {
+    const conditions = input.conditions.info
+    let sql = ``
+    conditions.product_ids.forEach((product_id, index) => {
+        sql += `delete from carts where user_id = '${conditions.user_id}' and product_id = '${product_id}'`
+        if (index < conditions.product_ids.length - 1) {
+            sql += `; `
+        }
+    })
+
+    return new Promise((resolve, reject) => {
+        connection.query(sql, (err, result) => {
+            if (err) {
+                logger.error(err)
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+
 }

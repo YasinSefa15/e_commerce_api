@@ -23,6 +23,7 @@ exports.create = async (values) => {
 exports.findBy = async (input) => {
     let sql = `SELECT type,product_id, CONCAT(?,'',file_path) as file_path,order_of FROM images ${parse_conditions(input.conditions)} and deleted_at is null`
     console.log(sql)
+
     return new Promise((resolve, reject) => {
         connection.query(sql, [full_url, input.value], (err, result) => {
             if (err) {
