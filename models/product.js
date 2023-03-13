@@ -47,7 +47,7 @@ exports.create = async (input) => {
             if (err) {
                 reject(err)
             } else {
-                resolve(result)
+                resolve({result: result, slug: slug})
             }
         })
     })

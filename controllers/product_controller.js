@@ -1,11 +1,12 @@
 const {
     unsuccessful,
-    successful_read, server_error, successful_create
+    successful_read, server_error, successful_create, update_or_delete_response
 } = require("../helpers/response_helper");
-const {validate_or_throw_error} = require("../helpers/validation_helper")
+const {validate_or_throw_error, validate_schema_in_async} = require("../helpers/validation_helper")
 const Joi = require("joi")
 const product = require("../models/product")
 const image = require("../models/image")
+const {client} = require("../redis");
 
 exports.create = (req, res) => {
     const schema = Joi.object({
@@ -16,7 +17,7 @@ exports.create = (req, res) => {
         description: Joi.string().min(0).max(255).required()
     })
 
-    validate_or_throw_error(schema, req.body, res)
+    validate_schema_in_async(schema, req.body, res)
 
     const body = req.body
 
@@ -27,21 +28,55 @@ exports.create = (req, res) => {
         price: body.price,
         quantity: body.quantity,
     })
-        .then((result) => {
+        .then(async (resolved) => {
+            const result = resolved.result
+            //console.log("product controller create", result)
             //in catch unlink files
+            let new_product = {
+                id: result.insertId,
+                category_id: body.category_id,
+                title: body.title,
+                description: body.description,
+                price: body.price,
+                quantity: body.quantity,
+                images: [],
+                slug: resolved.slug
+            }
+
             for (let i = 0; i < req.files.length; i++) {
-                image.create({
+                await image.create({
                     type: 0,
                     product_id: result.insertId,
                     file_path: req.files[i].path,
                     order_of: i
-                }).then(r => {
                 })
+                    .then((r) => {
+                        //todo file path will be updated
+                        new_product.images.push({
+                            file_path: "http://127.0.0.1:8080/" + req.files[i].path,
+                            order_of: i,
+                            type: 0,
+                            product_id: result.insertId,
+                        })
+                        console.log(new_product)
+                    })
                     .catch(e => {
                         console.log("product controller image create")
                         console.log(e)
                     })
+
             }
+
+            let products = JSON.parse(await client.get('Products'))
+            if (products) {
+                products.push(new_product)
+            } else {
+                products = [new_product]
+            }
+
+            await client.set('Products', JSON.stringify(products))
+
+
             //rollback transaction
             successful_create(res, "Product is created")
 
@@ -101,8 +136,33 @@ exports.update = (req, res) => {
 //ND
 //Deleting product with images
 exports.delete = (req, res) => {
-    console.log("product read in")
-    successful_read([], res)
+    const schema = Joi.object({
+        product_id: Joi.number().required()
+    })
+
+    validate_or_throw_error(schema, req.body, res)
+
+    product.delete({
+        conditions: {
+            'id': {
+                'condition': 'or',
+                'values': [req.body.product_id]
+            }
+        }
+    })
+        .then((result) => {
+            image.delete({
+                product_id: req.body.product_id
+            })
+                .then((result) => {
+
+                })
+
+            update_or_delete_response(result["affectedRows"], res)
+        })
+        .catch((error) => {
+            server_error(res, error)
+        })
 }
 
 //ND

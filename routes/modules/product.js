@@ -24,6 +24,7 @@ const product_router = express.Router()
 product_router.post('/', upload.array('files', 3), product_controller.create)
 product_router.put('/', upload.array('files', 3), product_controller.update)
 product_router.get('/:slug', product_controller.view)
+product_router.delete('/', product_controller.delete)
 
 
 module.exports = product_router

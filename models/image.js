@@ -57,15 +57,16 @@ exports.update = (req) => {
     })
 }
 
-exports.delete = (req) => {
+exports.delete = (input) => {
     return new Promise((resolve, reject) => {
-        connection.query('DELETE FROM carts WHERE user_id = ? and product_id = ?', [req.auth.user_id, req.body.product_id], function (error, results, fields) {
-            if (error) {
-                logger.error(error)
-                reject(error)
-            } else {
-                resolve(results.affectedRows)
-            }
-        })
+        connection.query('update images set deleted_at = ? where product_id = ? and deleted_at is null',
+            [current_timestamp, input.product_id], function (error, results, fields) {
+                if (error) {
+                    logger.error(error)
+                    reject(error)
+                } else {
+                    resolve(results.affectedRows)
+                }
+            })
     })
 }
