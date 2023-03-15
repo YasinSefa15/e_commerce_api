@@ -1,7 +1,7 @@
 const connection = require("../db")
 const {
     parse_column_names, parse_conditions, current_timestamp,
-    parse_nested_conditions, parse_multiple_conditions
+    parse_nested_conditions, parse_multiple_conditions, pagination_parser
 } = require("../helpers/query_helper")
 const logger = require("../logs/logger");
 
@@ -90,8 +90,10 @@ exports.update = async (input) => {
 
 //Under categories, all products will be returned; caterogy controller
 exports.findBy = async (input) => {
-    let sql = `SELECT ${parse_column_names(input.column_names)} FROM products inner join categories on categories.id = products.category_id  ${parse_conditions(input.conditions)} and categories.deleted_at is null
-        and products.deleted_at is null`
+    let sql = `SELECT ${parse_column_names(input.column_names)} FROM products inner join categories 
+        on categories.id = products.category_id  ${parse_conditions(input.conditions)} and categories.deleted_at is null
+        and products.deleted_at is null
+        ${pagination_parser(input.pagination)}`
 
     console.log(sql)
 

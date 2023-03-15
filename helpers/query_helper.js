@@ -4,19 +4,28 @@ module.exports.parse_column_names = (column_names) => {
 }
 
 module.exports.parse_conditions = (conditions) => {
-    let query_condition = 'where '
+    let query_condition = ' '
     if (conditions !== undefined) {
-
+        query_condition += ''
         //traverse in conditions object by key
         for (const key in conditions) {
             //accessing values
             //console.log("key: " + key)
             if (conditions.hasOwnProperty(key)) {
-                query_condition += '('
+                console.log(conditions[key])
                 //console.log(conditions[key])
                 //console.log(conditions[key]['values'])
-
                 //console.log(typeof conditions[key]['values'])
+
+                if (conditions[key]['values'].length === 0) {
+
+                    query_condition += 'where (1=1) '
+
+                    console.log(key + " is empty")
+                } else {
+                    query_condition += 'where ('
+                }
+
                 //creating query string
                 conditions[key]['values'].forEach((value) => {
                     query_condition += " " + key + (conditions[key]['operator'] ?? " = ") + value + " "
@@ -157,4 +166,14 @@ exports.bind = (input) => {
     })
 
     return result
+}
+
+exports.pagination_parser = (pagination) => {
+    let query_condition = ``
+    if (pagination !== undefined) {
+        if (pagination.limit !== undefined && pagination.offset !== undefined) {
+            query_condition += `limit ${pagination.limit} offset ${pagination.offset}`
+        }
+    }
+    return query_condition
 }

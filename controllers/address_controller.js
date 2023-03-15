@@ -52,12 +52,6 @@ exports.read = (req, res) => {
         })
 }
 
-//will be implemented when needed
-exports.view = (req, res) => {
-    res.status(200).send("Address Details")
-}
-
-
 exports.delete = (req, res) => {
     validate_or_throw_error(
         Joi.object({

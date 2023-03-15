@@ -7,8 +7,6 @@ const address_router = express.Router()
 address_router.get('/', address_controller.read)
 //creating an address
 address_router.post('/', address_controller.create)
-//viewing an address details
-address_router.get('/:id', address_controller.view)
 //deleting an address
 address_router.delete('/', address_controller.delete)
 
