@@ -63,7 +63,6 @@ exports.read = async (req, res) => {
         column_names: ['id', 'parent_id', 'title', 'slug']
     })
         .then(async (category_result) => {
-
             successful_read(categories_list(category_result), res, "Categories listed")
         })
         .catch((err) => {
@@ -71,19 +70,39 @@ exports.read = async (req, res) => {
         })
 }
 
-
+//todo products pagination
 exports.view = (req, res) => {
+    const schema = Joi.object({
+        limit: Joi.number().integer().min(1),
+        page: Joi.string().min(3).max(30).required()
+    })
+
+
     category.findBy({
         //column: 'slug',
         value: req.params.slug,
         column_names: ['id', 'parent_id', 'slug']
     })
-        .then((categories_ids) => {
+        .then(async (categories_ids) => {
 
             if (categories_ids.length === 0) {
                 successful_read([], res, "No category found")
                 return
             }
+
+            //products fetched from the cache
+            let products_cached = await client.get("Products")
+
+            //if there are values in the cache
+            if (products_cached) {
+                products_cached = JSON.parse(products_cached)
+                let filtered_products = Object.values(products_cached).filter((product) => {
+                    return categories_ids.includes(parseInt(product.category_id))
+                })
+                successful_read(filtered_products, res, "Products listed")
+                return
+            }
+
             product.findBy({
                 column_names: ['products.id', 'products.title', 'products.slug', 'products.price', 'products.description', 'products.category_id',
                     'products.quantity'],
@@ -107,9 +126,14 @@ exports.view = (req, res) => {
                         },
                         result: result,
                         bind: result
-                    }).then((images) => {
+                    }).then(async (images) => {
                         //console.log(images)
                         //console.log(result)
+
+                        //products cached with images in the database
+                        let cache = images
+                        cache.total_count = Object.keys(cache).length
+                        await client.set('Products', JSON.stringify(cache))
                         successful_read(images, res, 'All the products listed with given category')
                     })
                 })
@@ -144,8 +168,8 @@ exports.update = (req, res) => {
             })
                 .then(async (categories_db) => {
                     await client.set('Categories', JSON.stringify(categories_list(categories_db)))
-                    console.log("categories_db")
-                    console.log(categories_db)
+                    //console.log("categories_db")
+                    //console.log(categories_db)
                     update_or_delete_response(result['affectedRows'], res)
                 })
 
@@ -172,21 +196,22 @@ exports.delete = (req, res) => {
     })
         .then(async (categories_db) => {
             //if the cache is not available, we need to fetch the data from the database
-            category.delete({
+            await category.delete({
                 id: req.body.id,
                 all_categories: categories_db
             })
-                .then(async (resolved, final_category_list) => {
+                .then(async (resolved) => {
                     if (resolved.result['affectedRows'] !== 0) {
                         await client.set('Categories', JSON.stringify(categories_list(resolved.final_category_list)))
-                        product.delete({
+                        await product.delete({
                             conditions: {
                                 'category_id': {
                                     'condition': 'or',
                                     'values': resolved.subcategories_ids
                                 }
                             }
-                        }).then((result) => {
+                        })
+                            .then((result) => {
                         })
                     }
 
@@ -197,6 +222,7 @@ exports.delete = (req, res) => {
                     server_error(res, err)
                 })
 
-
+        })
+        .catch((err) => {
         })
 }

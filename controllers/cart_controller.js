@@ -49,13 +49,13 @@ exports.update = async (req, res) => {
         })
 }
 
-exports.view = (req, res) => {
-    cart.findBy({
+exports.view = async (req, res) => {
+    await cart.findBy({
         value: req.auth.user_id
     })
-        .then((result) => {
+        .then(async (result) => {
             //console.log(result)
-            image.findBy({
+            await image.findBy({
                 conditions: {
                     'product_id': {
                         'condition': 'or',
@@ -66,10 +66,14 @@ exports.view = (req, res) => {
                 },
                 result: result,
                 bind: result
-            }).then((images) => {
-                //console.log("images", images)
-                successful_read(images, res)
             })
+                .then((images) => {
+                    //console.log("images", images)
+                    successful_read(images, res)
+                })
+                .catch((err) => {
+                    server_error(res, err)
+                })
         })
         .catch((err) => {
             server_error(res, err)

@@ -1,6 +1,6 @@
 const connection = require("../db");
 const logger = require("../logs/logger");
-const {parse_column_names, current_timestamp, parse_conditions, bind} = require("../helpers/query_helper");
+const {current_timestamp, parse_conditions, bind} = require("../helpers/query_helper");
 require('dotenv').config({path: __dirname + '/../.env'})
 const full_url = "http://" + process.env.HOST + ":" + process.env.PORT + "/"
 

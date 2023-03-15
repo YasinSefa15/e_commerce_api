@@ -34,7 +34,7 @@ module.exports.parse_conditions = (conditions) => {
         }
     }
 
-    console.log(query_condition)
+    console.log("parsed conditions", query_condition)
 
     return query_condition
 }

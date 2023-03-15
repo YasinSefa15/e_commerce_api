@@ -30,17 +30,18 @@ exports.create = (req, res) => {
     })
         .then(async (resolved) => {
             const result = resolved.result
+            const insertedId = result.insertId
             //console.log("product controller create", result)
             //in catch unlink files
             let new_product = {
                 id: result.insertId,
-                category_id: body.category_id,
                 title: body.title,
-                description: body.description,
+                slug: resolved.slug,
+                category_id: body.category_id,
                 price: body.price,
+                description: body.description,
                 quantity: body.quantity,
-                images: [],
-                slug: resolved.slug
+                images: []
             }
 
             for (let i = 0; i < req.files.length; i++) {
@@ -58,7 +59,7 @@ exports.create = (req, res) => {
                             type: 0,
                             product_id: result.insertId,
                         })
-                        console.log(new_product)
+                        //console.log(new_product)
                     })
                     .catch(e => {
                         console.log("product controller image create")
@@ -69,13 +70,13 @@ exports.create = (req, res) => {
 
             let products = JSON.parse(await client.get('Products'))
             if (products) {
-                products.push(new_product)
+                products[insertedId] = new_product
+                products.total_count += 1
             } else {
-                products = [new_product]
+                products = {[insertedId]: new_product, "total_count": 1}
             }
 
             await client.set('Products', JSON.stringify(products))
-
 
             //rollback transaction
             successful_create(res, "Product is created")
@@ -86,44 +87,79 @@ exports.create = (req, res) => {
         })
 }
 
-//ND
+//todo ND
 //Updating product with images
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
     const schema = Joi.object({
-        old_category_id: Joi.number().required(),
-        category_id: Joi.number().required(),
-        quantity: Joi.number().required(),
-        price: Joi.number().required(),
+        product_id: Joi.number().positive().required(),
+        category_id: Joi.number().positive().required(),
         title: Joi.string().min(4).max(25).required(),
-        description: Joi.string().min(0).max(255).required()
+        description: Joi.string().min(0).max(255).required(),
+        price: Joi.number().positive().required(),
+        quantity: Joi.number().required(),
     })
 
     validate_or_throw_error(schema, req.body, res)
 
+    let cached = JSON.parse(await client.get('Products'))
+
+    //if cache is empty or product is not in cache
+    if (!cached || !cached[req.body.product_id]) {
+        update_or_delete_response(0, res)
+        return
+    }
+
     const body = req.body
 
     product.update({
+        product_id: body.product_id,
         category_id: body.category_id,
         title: body.title,
         description: body.description,
         price: body.price,
-        quantity: body.quantity,
+        quantity: body.quantity
     })
-        .then((result) => {
+        .then((resolved) => {
+            const result = resolved.result
+
             //in catch unlink files
+            image.delete({
+                product_id: req.body.product_id
+            })
+                .then(r => {
+                })
+
             for (let i = 0; i < req.files.length; i++) {
+                if (i === 0) {
+                    cached[req.body.product_id].images = []
+                }
                 image.create({
                     type: 0,
                     product_id: result.insertId,
                     file_path: req.files[i].path,
                     order_of: i
                 }).then(r => {
+                    //todo test
+                    cached[req.body.product_id].images.push({
+                        type: 0,
+                        product_id: result.insertId,
+                        file_path: "http://" + req.headers.host + "/" + req.files[i].path,
+                        order_of: i,
+                    })
                 })
                     .catch(e => {
                         console.log("product controller image create")
                         console.log(e)
                     })
             }
+
+            cached[req.body.product_id].title = body.title
+
+            cached[req.body.product_id].price = body.price
+            cached[req.body.product_id].description = body.description
+            cached[req.body.product_id].category_id = body.category_id
+            cached[req.body.product_id].quantity = body.quantity
+
             //rollback transaction
             successful_create(res, "Product is created")
 
@@ -133,14 +169,23 @@ exports.update = (req, res) => {
         })
 }
 
-//ND
+
 //Deleting product with images
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
     const schema = Joi.object({
         product_id: Joi.number().required()
     })
 
-    validate_or_throw_error(schema, req.body, res)
+    validate_schema_in_async(schema, req.body, res)
+
+    let cached = JSON.parse(await client.get('Products'))
+
+    //if cache is empty or product is not in cache
+    if (!cached || !cached[req.body.product_id]) {
+        update_or_delete_response(0, res)
+        return
+    }
+
 
     product.delete({
         conditions: {
@@ -150,13 +195,16 @@ exports.delete = (req, res) => {
             }
         }
     })
-        .then((result) => {
+        .then(async (result) => {
             image.delete({
                 product_id: req.body.product_id
             })
-                .then((result) => {
-
+                .then(() => {
                 })
+
+            delete cached[req.body.product_id]
+            cached.total_count -= 1
+            await client.set('Products', JSON.stringify(cached))
 
             update_or_delete_response(result["affectedRows"], res)
         })

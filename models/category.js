@@ -212,7 +212,6 @@ exports.delete = async (input) => {
         }
     })
 
-
     let sql = `update categories set deleted_at = ? ${conditions} and (deleted_at is null) `
     //let sql = `delete from categories where id = ? `
 
