@@ -7,7 +7,23 @@ exports.create = async (values) => {
     let sql = `insert into carts (user_id,product_id) values ('${values.auth.user_id}','${values.body.product_id}')`
 
     return new Promise((resolve, reject) => {
-        connection.query(sql, (err, result) => {
+        connection.query(sql, [values.auth.user_id, values.body.product_id], (err, result) => {
+            if (err) {
+                logger.error(err)
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+}
+
+exports.is_available_to_add_cart = async (values) => {
+    //if product exists and not in cart by user
+    const sql = 'select * from products  where products.id = ? and id not in (select product_id as id from carts where carts.product_id = ? and carts.user_id = ?)'
+
+    return new Promise((resolve, reject) => {
+        connection.query(sql, [values.product_id, values.product_id, values.user_id], (err, result) => {
             if (err) {
                 logger.error(err)
                 reject(err)

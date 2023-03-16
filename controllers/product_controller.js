@@ -1,12 +1,15 @@
 const {
-    unsuccessful,
-    successful_read, server_error, successful_create, update_or_delete_response
-} = require("../helpers/response_helper");
+    successful_read,
+    server_error,
+    successful_create,
+    update_or_delete_response
+} = require("../helpers/response_helper")
 const {validate_or_throw_error, validate_schema_in_async} = require("../helpers/validation_helper")
 const Joi = require("joi")
 const product = require("../models/product")
 const image = require("../models/image")
-const {client} = require("../redis");
+const {client} = require("../redis")
+
 
 exports.create = (req, res) => {
     const schema = Joi.object({
@@ -14,10 +17,11 @@ exports.create = (req, res) => {
         quantity: Joi.number().required(),
         price: Joi.number().required(),
         title: Joi.string().min(4).max(25).required(),
-        description: Joi.string().min(0).max(255).required()
+        description: Joi.string().min(0).max(255).required(),
+
     })
 
-    validate_schema_in_async(schema, req.body, res)
+    validate_or_throw_error(schema, req.body, res)
 
     const body = req.body
 
@@ -52,9 +56,8 @@ exports.create = (req, res) => {
                     order_of: i
                 })
                     .then((r) => {
-                        //todo file path will be updated
                         new_product.images.push({
-                            file_path: "http://127.0.0.1:8080/" + req.files[i].path,
+                            file_path: req.files[i].path,
                             order_of: i,
                             type: 0,
                             product_id: result.insertId,
@@ -64,11 +67,13 @@ exports.create = (req, res) => {
                     .catch(e => {
                         console.log("product controller image create")
                         console.log(e)
+                        //server_error(res, e)
                     })
-
             }
 
+            //update cache
             let products = JSON.parse(await client.get('Products'))
+
             if (products) {
                 products[insertedId] = new_product
                 products.total_count += 1
@@ -87,7 +92,6 @@ exports.create = (req, res) => {
         })
 }
 
-//todo ND
 //Updating product with images
 exports.update = async (req, res) => {
     const schema = Joi.object({
@@ -99,7 +103,11 @@ exports.update = async (req, res) => {
         quantity: Joi.number().required(),
     })
 
-    validate_or_throw_error(schema, req.body, res)
+    const validate = validate_schema_in_async(schema, req.body, res)
+
+    if (validate) {
+        return validate
+    }
 
     let cached = JSON.parse(await client.get('Products'))
 
@@ -119,9 +127,11 @@ exports.update = async (req, res) => {
         price: body.price,
         quantity: body.quantity
     })
-        .then((resolved) => {
+        .then(async (resolved) => {
             const result = resolved.result
 
+
+            //todo image var ise kontrol et
             //in catch unlink files
             image.delete({
                 product_id: req.body.product_id
@@ -133,16 +143,15 @@ exports.update = async (req, res) => {
                 if (i === 0) {
                     cached[req.body.product_id].images = []
                 }
-                image.create({
+                await image.create({
                     type: 0,
-                    product_id: result.insertId,
+                    product_id: req.body.product_id,
                     file_path: req.files[i].path,
                     order_of: i
                 }).then(r => {
-                    //todo test
                     cached[req.body.product_id].images.push({
                         type: 0,
-                        product_id: result.insertId,
+                        product_id: req.body.product_id,
                         file_path: "http://" + req.headers.host + "/" + req.files[i].path,
                         order_of: i,
                     })
@@ -153,15 +162,19 @@ exports.update = async (req, res) => {
                     })
             }
 
-            cached[req.body.product_id].title = body.title
 
+            //update cache
+            cached[req.body.product_id].title = body.title
+            //todo slug update
             cached[req.body.product_id].price = body.price
             cached[req.body.product_id].description = body.description
             cached[req.body.product_id].category_id = body.category_id
             cached[req.body.product_id].quantity = body.quantity
 
+            await client.set('Products', JSON.stringify(cached))
+
             //rollback transaction
-            successful_create(res, "Product is created")
+            successful_create(res, "Product is updated")
 
         })
         .catch((error) => {
@@ -185,7 +198,6 @@ exports.delete = async (req, res) => {
         update_or_delete_response(0, res)
         return
     }
-
 
     product.delete({
         conditions: {
@@ -213,7 +225,7 @@ exports.delete = async (req, res) => {
         })
 }
 
-//ND
+//todo not done
 //Product details
 exports.view = async (req, res) => {
     const product_result = await product.findOneBy({

@@ -71,9 +71,8 @@ exports.delete = async (input) => {
 }
 
 
-//todo test it
 exports.update = async (input) => {
-    let sql = `update products set category_id = ?, title = ?, price = ?, description = ?, quantity = ?,updated_at = ? where product_id = ? and deleted_at is null`
+    let sql = `update products set category_id = ?, title = ?, price = ?, slug = ?,description = ?, quantity = ?,updated_at = ? where id = ? and deleted_at is null`
 
     return new Promise(async (resolve, reject) => {
         const slug = await unique_slug(input.title)

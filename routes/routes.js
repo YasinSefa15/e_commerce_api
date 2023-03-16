@@ -8,6 +8,8 @@ const product_router = require("./modules/product");
 
 const router = express.Router()
 
+//todo admin routes will separate
+
 const api_routes = router
     .get('/', function (req, res) {
         res.send("Successful API route")

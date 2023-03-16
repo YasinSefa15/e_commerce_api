@@ -1,24 +1,40 @@
 const {
-    successful_create, successful_read, server_error, update_or_delete_response
-} = require("../helpers/response_helper");
-const cart = require("../models/cart");
-const Joi = require("joi");
-const {validate_schema_in_async} = require("../helpers/validation_helper");
-const image = require("../models/image");
+    successful_create,
+    successful_read,
+    server_error,
+    update_or_delete_response, unsuccessful
+} = require("../helpers/response_helper")
+const cart = require("../models/cart")
+const Joi = require("joi")
+const {validate_schema_in_async} = require("../helpers/validation_helper")
+const image = require("../models/image")
+
 
 exports.create = async (req, res) => {
     const schema = Joi.object({
         product_id: Joi.number().required()
     })
 
-    //validate_or_throw_error(schema, req.body, res)
-    const validated = validate_schema_in_async(schema, req.body, res)
+    validate_schema_in_async(schema, req.body, res)
 
-    if (validated) {
-        return validated
+    //check if the product is available to add to cart
+    const existence = await cart.is_available_to_add_cart({
+        user_id: req.auth.user_id,
+        product_id: req.body.product_id
+    }).then((result) => {
+        return result[0] ?? result
+    })
+        .catch((err) => {
+            return undefined
+        })
+
+    if (existence === undefined) {
+        return server_error(res)
+    } else if (existence.length === 0) {
+        return unsuccessful(res, "Product does not exist or already added to cart")
     }
 
-    await cart.create(req)
+    cart.create(req)
         .then((result) => {
             successful_create(res, "Product added to cart")
         })
