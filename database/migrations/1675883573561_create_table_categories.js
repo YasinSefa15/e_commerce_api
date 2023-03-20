@@ -3,8 +3,8 @@ module.exports = {
         "(\n" +
         "    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,\n" +
         "    parent_id  INT UNSIGNED ,\n" +
-        "    title      VARCHAR(25) NOT NULL,\n" +
-        "    slug       VARCHAR(28) NOT NULL UNIQUE,\n" +
+        "    title      VARCHAR(63) NOT NULL,\n" +
+        "    slug       VARCHAR(127) NOT NULL UNIQUE,\n" +
         "    created_at TIMESTAMP   NOT NULL,\n" +
         "    updated_at TIMESTAMP,\n" +
         "    deleted_at TIMESTAMP,\n" +

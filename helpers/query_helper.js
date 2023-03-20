@@ -171,9 +171,10 @@ exports.bind = (input) => {
 exports.pagination_parser = (pagination) => {
     let query_condition = ``
     if (pagination !== undefined) {
-        if (pagination.limit !== undefined && pagination.offset !== undefined) {
+        if (!isNaN(pagination.limit) && !isNaN(pagination.offset)) {
             query_condition += `limit ${pagination.limit} offset ${pagination.offset}`
         }
     }
+
     return query_condition
 }

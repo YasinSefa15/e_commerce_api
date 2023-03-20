@@ -8,6 +8,7 @@ const cart = require("../models/cart")
 const Joi = require("joi")
 const {validate_schema_in_async} = require("../helpers/validation_helper")
 const image = require("../models/image")
+const {client} = require("../redis");
 
 
 exports.create = async (req, res) => {
@@ -65,12 +66,31 @@ exports.update = async (req, res) => {
         })
 }
 
+//todo what if redis could not connect??
 exports.view = async (req, res) => {
     await cart.findBy({
         value: req.auth.user_id
     })
         .then(async (result) => {
-            //console.log(result)
+            const product_ids = result.map((product) => {
+                return product.product_id
+            })
+
+            const products_in_cache = JSON.parse(await client.get("Products"))
+
+            const filtered_products = Object.fromEntries(Object.values(products_in_cache).filter((product) => {
+                //console.log(product)
+
+                //total_count is int, holds the total count number record
+                if (typeof product === "number") {
+                    return false
+                }
+
+                return product_ids.includes(product.id)
+            }))
+
+            return successful_read(filtered_products, res)
+
             await image.findBy({
                 conditions: {
                     'product_id': {

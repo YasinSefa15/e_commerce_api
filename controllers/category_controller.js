@@ -61,6 +61,8 @@ exports.read = async (req, res) => {
         column_names: ['id', 'parent_id', 'title', 'slug']
     })
         .then(async (category_result) => {
+            const categories = categories_list(category_result)
+            await client.set('Categories', JSON.stringify(categories))
             successful_read(categories_list(category_result), res, "Categories listed")
         })
         .catch((err) => {
