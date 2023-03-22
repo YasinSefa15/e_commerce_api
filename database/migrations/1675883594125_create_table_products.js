@@ -3,8 +3,8 @@ module.exports = {
         "(\n" +
         "    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,\n" +
         "    category_id INT UNSIGNED NOT NULL,\n" +
-        "    title       VARCHAR(25)  NOT NULL,\n" +
-        "    slug        VARCHAR(28)  NOT NULL UNIQUE,\n" +
+        "    title       VARCHAR(63)  NOT NULL,\n" +
+        "    slug        VARCHAR(127)  NOT NULL UNIQUE,\n" +
         "    description VARCHAR(255) NOT NULL,\n" +
         "    price       INT UNSIGNED NOT NULL,\n" +
         "    quantity    INT UNSIGNED NOT NULL default 0,\n" +

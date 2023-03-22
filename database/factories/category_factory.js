@@ -1,7 +1,7 @@
 const {faker} = require('./faker')
 const {current_timestamp} = require("../../helpers/query_helper");
 const connection = require(__dirname + "/../../db")
-const {string} = require("joi");
+//todo en son id ye gerek ypk aslında 1 kere çalıştır yeterli
 
 async function create_random_factory_query(count = 1) {
     let result = {
