@@ -1,6 +1,5 @@
-const start = Date.now();
 const {faker} = require('./faker')
-const {current_timestamp} = require("../../helpers/query_helper");
+const {current_timestamp} = require("../../helpers/query_helper")
 
 function create_random_user_query(count = 1) {
     let result = {
