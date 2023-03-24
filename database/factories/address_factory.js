@@ -3,6 +3,7 @@ const {run_query} = require("../seeds/seeder")
 const {current_timestamp} = require("../../helpers/query_helper");
 
 // user ids and products ids
+//todo if user is deleted then address should be deleted
 
 async function create_random_factory_query(count = 1) {
     let result = {

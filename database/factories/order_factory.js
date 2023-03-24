@@ -1,6 +1,7 @@
 const {faker} = require('./faker')
 const {run_query} = require("../seeds/seeder")
 const {current_timestamp} = require("../../helpers/query_helper");
+const {shipment_status} = require("../../helpers/shipment_status");
 
 //AUTO INCREMENT MUST BE RESET
 //todo timestamps will be added
@@ -51,18 +52,31 @@ async function create_random_factory_query(count = 1, category_count = 1) {
     //console.log("address info ", address_records)
 
 
-    let sql = `insert into orders (user_id,address_id,ordered_items_count,total_price,tracking_code,created_at,updated_at) 
-            values (?,?,?,?,?,?,?);\n`
+    let sql = `insert into orders 
+            (user_id,address_id,ordered_items_count,total_price,
+            shipment_status,tracking_code,cargo_company,created_at,updated_at,deleted_at) 
+            values (?,?,?,?,?,?,?,?,?,?);\n`
 
-    let sql_order_items = `insert into ordered_products (order_id,product_id,quantity,created_at,updated_at) values (?,?,?,?,?);\n`
+    let sql_order_items = `insert into ordered_products 
+        (order_id,product_id,quantity,created_at,updated_at,deleted_at)
+         values (?,?,?,?,?,?);\n`
 
     let chosen_products = []
     let chosen_address = []
+
+    let created_at = current_timestamp
+    let updated_at = null
+    let deleted_at = null
 
     //user can not add same product to cart twice
     for (let i = 0; i < count; i++) {
         chosen_products = faker.helpers.arrayElements(product_records, faker.datatype.number({min: 1, max: 10}))
         chosen_address = faker.helpers.arrayElement(address_records)
+
+        created_at = faker.date.past(1)
+        updated_at = faker.date.between(created_at, current_timestamp)
+        deleted_at = Math.floor(Math.random() * 2) === 1 ? faker.date.between(updated_at, current_timestamp) : null
+
         result.orders.queries += sql + " "
 
         //console.log(chosen[[chosen_user_id, chosen_product_id]])
@@ -72,9 +86,13 @@ async function create_random_factory_query(count = 1, category_count = 1) {
             chosen_address.id,
             chosen_products.length,
             chosen_products.reduce((a, b) => a + b.price, 0),
+            faker.helpers.objectKey(shipment_status),
             faker.datatype.number({min: 100000000000, max: 999999999999}),
-            current_timestamp,
-            current_timestamp
+            faker.helpers.arrayElement(["Yurtiçi Kargo", "MNG Kargo", "Aras Kargo", "Sürat Kargo", "PTT Kargo",
+                "UPS Kargo", "FedEx Kargo", "DHL Kargo", "TNT Kargo", "Pars Kargo"]),
+            created_at,
+            updated_at,
+            deleted_at
         )
 
         for (let j = 0; j < chosen_products.length; j++) {
@@ -83,8 +101,9 @@ async function create_random_factory_query(count = 1, category_count = 1) {
                 i + 1,
                 chosen_products[j].id,
                 faker.datatype.number({min: 1, max: chosen_products[j].quantity}),
-                current_timestamp,
-                current_timestamp
+                created_at,
+                Math.floor(Math.random() * 2) === 1 ? faker.date.between(created_at, current_timestamp) : updated_at,
+                deleted_at
             )
         }
     }
