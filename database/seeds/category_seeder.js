@@ -8,28 +8,29 @@ const {categories_list} = require("../../models/category");
 
 
 const seed = async () => {
-    const inputs = await category_factory.queries(1)
+    const inputs = await category_factory.queries(20)
         .then(r => {
-            console.log("*******------CATEGORY SEEDER INPUTS------*******")
-            //console.log(r)
             return r
         })
-    console.log("*******------CATEGORY SEEDER INPUTSxxx------*******")
     //console.log(inputs)
 
     run_query(inputs).then(async r => {
-            console.log(terminal_color_codes.background.green, "Database Successfully Seeded")
-            const all_categories = await run_query({queries: "SELECT * FROM categories", fields: []}).then(r => {
-                return r
+            console.log(terminal_color_codes.background.green, "Database Successfully Seeded For Categories")
+            const all_categories = await run_query({
+                queries: "SELECT * FROM categories where deleted_at is null",
+                fields: [],
+                close_connection: true
             })
+                .then(r => {
+                    return r
+                })
                 .catch(e => {
 
                 })
 
             //seeder closes sql connection, so we need to comment the line
-            console.log("*******------CATEGORY SEEDER INPUTSxxxx------*******aslkdlaksdlşasjdşlasjd")
             const categories = categories_list(all_categories)
-            console.log(categories)
+            //console.log(categories)
             await client.connect()
             await client.set("Categories", JSON.stringify(categories))
             await client.quit()
@@ -38,13 +39,8 @@ const seed = async () => {
         console.log(terminal_color_codes.background.red, "Database Seeding Failed")
         console.log(terminal_color_codes.background.red, e)
     })
-        .then(async () => {
-            console.log(terminal_color_codes.background.gray, "*******------CATEGORY SEEDER ENDED------*******")
-        })
-
-
 }
 
 seed().then(r => {
-    console.log("*******------CATEGORY SEEDER ENDEDXXXX------*******")
+    console.log("*******------CATEGORY SEEDER ENDED------*******")
 })

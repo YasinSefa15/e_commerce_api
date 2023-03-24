@@ -26,12 +26,18 @@ async function create_random_factory_query(count = 1) {
     //console.log("users ", user_ids)
 
 
-    let sql = `insert into addresses (first_name,last_name,title,city,state,description,phone,user_id,created_at,updated_at) 
-            values (?,?,?,?,?,?,?,?,?,?);\n`
+    let sql = `insert into addresses 
+            (first_name,last_name,title,city,state,description,phone,user_id,created_at,updated_at,deleted_at) 
+            values (?,?,?,?,?,?,?,?,?,?,?);\n`
 
+
+    let created_at = current_timestamp
+    let updated_at = null
 
     //user can not add same product to cart twice
     for (let i = 0; i < count; i++) {
+        created_at = faker.date.past(1)
+        updated_at = faker.date.between(created_at, current_timestamp)
         result.queries += sql + " "
 
         result.fields.push(
@@ -43,8 +49,9 @@ async function create_random_factory_query(count = 1) {
             faker.address.streetAddress(),
             faker.phone.number('50########'),
             faker.helpers.arrayElement(user_ids), //choose random user
-            current_timestamp,
-            current_timestamp
+            created_at,
+            updated_at,
+            Math.floor(Math.random() * 2) === 1 ? faker.date.between(updated_at, current_timestamp) : null
         )
     }
 
