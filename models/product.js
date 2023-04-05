@@ -1,48 +1,16 @@
 const connection = require("../db")
 const {
     parse_column_names, parse_conditions, current_timestamp,
-    parse_nested_conditions, parse_multiple_conditions, pagination_parser
+    parse_nested_conditions, parse_multiple_conditions, pagination_parser, unique_slug
 } = require("../helpers/query_helper")
 const logger = require("../logs/logger");
 
-unique_slug = async (title) => {
-    let result_slug = ''
-    let sql = `select id, slug from products where title = ? order by updated_at desc limit 1`
-
-    await new Promise(async (resolve, reject) => {
-        connection.query(sql, [title], (err, result,) => {
-            if (err) {
-                logger.error(err)
-                //console.log(err)
-                result_slug = title.toLowerCase().replace(' ', '-') + '-' + 1
-            } else {
-                if (result[0]) {
-                    const last_slug = result[0].slug.substring(result[0].slug.lastIndexOf('-') + 1)
-
-                    if (!isNaN(parseInt(last_slug))) {
-                        console.log("last slug is a number")
-                        result_slug = title.toLowerCase().replace(' ', '-') + '-' + (parseInt(last_slug) + 1)
-                    } else {
-                        result_slug = title.toLowerCase().replace(' ', '-') + '-' + 1
-                    }
-
-                } else {
-                    console.log("last slug is not a number")
-                    result_slug = title.toLowerCase().replace(' ', '-')
-                }
-            }
-            resolve()
-        }, [title])
-    })
-
-    return result_slug
-}
 
 exports.create = async (input) => {
     let sql = `insert into products (category_id,title,price,slug,description,quantity,created_at,updated_at) values (?,?,?,?,?,?,?,?)`
 
-    return new Promise(async (resolve, reject) => {
-        const slug = await unique_slug(input.title)
+    return new Promise((resolve, reject) => {
+        const slug = unique_slug(input.title)
         connection.query(sql, [input.category_id, input.title, input.price, slug, input.description, input.quantity, current_timestamp, current_timestamp], (err, result) => {
             if (err) {
                 reject(err)
@@ -88,11 +56,11 @@ exports.update = async (input) => {
 
 
 //Under categories, all products will be returned; caterogy controller
-exports.findBy = async (input) => {
+exports.findBy = (input) => {
     let sql = `SELECT ${parse_column_names(input.column_names)} FROM products inner join categories 
-        on categories.id = products.category_id  ${parse_conditions(input.conditions)} and categories.deleted_at is null
-        and products.deleted_at is null
-        ${pagination_parser(input.pagination)}`
+        on categories.id = products.category_id  ${parse_conditions(input.conditions)} ${input.params ?? ""} and categories.deleted_at is null
+        and products.deleted_at is null order by products.id
+        ${pagination_parser(input.pagination)} `
 
     console.log(sql)
 

@@ -39,12 +39,18 @@ const unsuccessful = (res, message = "Error") => {
     })
 }
 
-const successful_read = (data, res, message = "Successful") => {
-    res.status(HTTP_STATUS_CODES.OK).json({
+const successful_read = (data, res, message = "Successful", metadata = {}) => {
+    let response = {
         "status_code": HTTP_STATUS_CODES.OK,
         "message": message,
         "data": data
-    })
+    }
+
+    if (Object.keys(metadata).length) {
+        response.meta_data = metadata
+    }
+
+    res.status(HTTP_STATUS_CODES.OK).json(response)
 }
 
 const successful_create = (res, message = "Successful") => {
@@ -77,6 +83,7 @@ const not_found = (res) => {
 
 const server_error = (res, err = []) => {
     logger.error(err)
+    console.log(err)
 
     if (process.env.NODE_ENV === "development") {
         res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({

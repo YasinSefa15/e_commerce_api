@@ -3,8 +3,9 @@ const category_controller = require('../../controllers/category_controller')
 
 const category_router = express.Router()
 
-//lists all the categorys
+//lists all the categories
 category_router.get('/', category_controller.read)
+category_router.get('/list', category_controller.list)
 category_router.post('/', category_controller.create)
 category_router.put('/', category_controller.update)
 category_router.delete('/', category_controller.delete)

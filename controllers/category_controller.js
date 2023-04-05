@@ -13,19 +13,16 @@ const {client} = require("../redis")
 const images = require("../models/image")
 
 
-exports.create = async (req, res) => {
+exports.create = (req, res) => {
     const schema = Joi.object({
-        parent_id: Joi.number().integer().min(1), title: Joi.string().min(3).max(30).required(),
+        parent_id: Joi.number().integer().min(1),
+        title: Joi.string().min(3).max(30).required(),
     })
 
-    const validate = validate_schema_in_async(schema, req.body, res)
-
-    if (validate) {
-        return validate
-    }
+    validate_or_throw_error(schema, req.body)
 
     category.create({
-        parent_id: req.body.parent_id, title: req.body.title, slug: req.body.title
+        parent_id: req.body.parent_id, title: req.body.title
     })
         .then(async (inserted) => {
             category.all({
@@ -70,6 +67,19 @@ exports.read = async (req, res) => {
         })
 }
 
+exports.list = async (req, res) => {
+    //if the cache is not available, we need to fetch the data from the database
+    category.all({
+        column_names: ['id', 'title']
+    })
+        .then(async (category_result) => {
+            successful_read(category_result, res, "Categories listed")
+        })
+        .catch((err) => {
+            server_error(res, err)
+        })
+}
+
 exports.view = (req, res) => {
     const schema = Joi.object({
         limit: Joi.number().integer().min(1), //records per page
@@ -79,6 +89,7 @@ exports.view = (req, res) => {
         .with('page', 'limit')
 
     validate_or_throw_error(schema, req.query, res)
+
 
     category.findBy({
         //column: 'slug',
@@ -99,6 +110,7 @@ exports.view = (req, res) => {
                 let counter = 0
                 const start = (parseInt(req.query.page) - 1) * parseInt(req.query.limit)
                 let end = start + parseInt(req.query.limit)
+                //console.log("start ", start, " end ", end)
                 products_cached = JSON.parse(products_cached)
                 //console.log(products_cached)
 
@@ -109,15 +121,17 @@ exports.view = (req, res) => {
                         return categories_ids.includes(parseInt(value.category_id))
                     } else if (start < end) {
                         //paginates the products
-                        return categories_ids.includes(parseInt(value.category_id)) && counter++ && (counter - start > 0) && end--
+                        return categories_ids.includes(parseInt(value.category_id)) && ++counter && (counter - start > 0) && end--
                     } else {
                         return false
                     }
                 }))
+
                 successful_read(filtered_products, res, "All the products listed with given category")
                 return
             }
 
+            //if there are no values in the cache
             product.findBy({
                 column_names: ['products.id', 'products.title', 'products.slug', 'products.price', 'products.description', 'products.category_id', 'products.quantity'],
                 column: 'category_id',
@@ -145,10 +159,8 @@ exports.view = (req, res) => {
                         .then(async (images) => {
                             //console.log(images)
                             //console.log(result)
-                            //products cached with images in the database
-                            let cache = images
-                            cache.total_count = Object.keys(cache).length
-                            await client.set('Products', JSON.stringify(cache))
+                            //can not cache the product since there is condition on the query, all product did not fetch
+
                             successful_read(images, res, 'All the products listed with given category')
                         })
                         .catch((err) => {
@@ -225,15 +237,7 @@ exports.delete = (req, res) => {
                 .then(async (resolved) => {
                     if (resolved.result['affectedRows'] !== 0) {
                         await client.set('Categories', JSON.stringify(categories_list(resolved.final_category_list)))
-                        await product.delete({
-                            conditions: {
-                                'category_id': {
-                                    'condition': 'or', 'values': resolved.subcategories_ids
-                                }
-                            }
-                        })
-                            .then((result) => {
-                            })
+
                     }
 
                     update_or_delete_response(resolved.result['affectedRows'], res)

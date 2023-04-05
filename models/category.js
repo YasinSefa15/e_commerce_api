@@ -1,7 +1,6 @@
-const connection = require("../db");
-const logger = require("../logs/logger");
-const {client, connection_status, redis_status} = require("../redis");
-const {parse_column_names, current_timestamp, parse_conditions} = require("../helpers/query_helper");
+const connection = require("../db")
+const logger = require("../logs/logger")
+const {parse_column_names, current_timestamp, parse_conditions, unique_slug} = require("../helpers/query_helper")
 
 
 exports.categories_list = (category_result) => {
@@ -55,44 +54,11 @@ const subcategories_id = (categories_list, slug) => {
 }
 
 
-unique_slug = async (title) => {
-    let result_slug = ''
-    let sql = `select id, slug from categories where title = ? order by updated_at desc limit 1`
-
-    await new Promise(async (resolve, reject) => {
-        connection.query(sql, [title], (err, result,) => {
-            if (err) {
-                logger.error(err)
-                //console.log(err)
-                result_slug = title.toLowerCase().replace(' ', '-') + '-' + 1
-            } else {
-                if (result[0]) {
-                    const last_slug = result[0].slug.substring(result[0].slug.lastIndexOf('-') + 1)
-
-                    if (!isNaN(parseInt(last_slug))) {
-                        console.log("last slug is a number")
-                        result_slug = title.toLowerCase().replace(' ', '-') + '-' + (parseInt(last_slug) + 1)
-                    } else {
-                        result_slug = title.toLowerCase().replace(' ', '-') + '-' + 1
-                    }
-
-                } else {
-                    console.log("last slug is not a number")
-                    result_slug = title.toLowerCase().replace(' ', '-')
-                }
-            }
-            resolve()
-        }, [title])
-    })
-
-    return result_slug
-}
-
-exports.create = async (input) => {
+exports.create = (input) => {
     let sql = `insert into categories (parent_id,title,slug,created_at,updated_at) values(?,?,?,?,?) ` //where ${input.column} = '${input.value}'
 
     return new Promise(async (resolve, reject) => {
-        const slug = await unique_slug(input.slug)
+        const slug = unique_slug(input.title)
         connection.query(sql, [input.parent_id ?? null, input.title, slug, current_timestamp, current_timestamp], (err, result) => {
             if (err) {
                 logger.error(err)
@@ -154,9 +120,9 @@ exports.findOneBy = async (input) => {
     })
 }
 
-exports.update = async (input) => {
+exports.update = (input) => {
     let sql = `update categories set title = ?, slug = ?, parent_id = ? ,updated_at = ? where id = ? and deleted_at is null`
-    const slug = await unique_slug(input.title)
+    const slug = unique_slug(input.title)
 
     return new Promise(async (resolve, reject) => {
         connection.query(sql, [input.title, slug, input.parent_id, current_timestamp, input.id], (err, result) => {
@@ -206,19 +172,24 @@ exports.delete = async (input) => {
     const final_category_list = this.categories_list(removed_list)
 
     const conditions = parse_conditions({
-        'id': {
+        'c.id': {
             'condition': 'or',
             'values': subcategories_ids
         }
     })
 
-    let sql = `update categories set deleted_at = ? ${conditions} and (deleted_at is null) `
+    //let sql = `update categories set deleted_at = ? ${conditions} and (deleted_at is null) `
+    let sql = `update categories c
+            left join products p on c.id = p.category_id 
+            left join images i on p.id = i.product_id
+            set c.deleted_at = ? , p.deleted_at = ? , i.deleted_at = ?
+            ${conditions} and (c.deleted_at is null) `
     //let sql = `delete from categories where id = ? `
 
     console.log(sql)
 
     return new Promise(async (resolve, reject) => {
-        connection.query(sql, [current_timestamp], (err, result) => {
+        connection.query(sql, [current_timestamp, current_timestamp, current_timestamp], (err, result) => {
             if (err) {
                 logger.error(err)
                 reject(err)

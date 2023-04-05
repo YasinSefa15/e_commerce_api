@@ -178,3 +178,9 @@ exports.pagination_parser = (pagination) => {
 
     return query_condition
 }
+
+
+exports.unique_slug = (title) => {
+    let slug = title.replace(/[ 0-9 ]/g, "").replace(/\s+/g, '-').toLowerCase()
+    return slug + "-" + Math.floor(Math.random() * 1000000000)
+}
