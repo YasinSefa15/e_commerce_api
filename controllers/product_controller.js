@@ -16,23 +16,24 @@ exports.read = async (req, res) => {
     const schema = Joi.object({
         limit: Joi.number().integer().min(1),
         offset: Joi.number().integer().min(0),
-        searched: Joi.string().min(3).max(63),
+        searched: Joi.string().min(1).max(63),
     })
 
     const validation = await validate_schema_in_async(schema, req.query, res)
 
     if (validation.error) {
-        server_error(res, validation.error)
+        await server_error(res, validation.error)
         return
     }
 
     let input = {}
     let params = ""
 
+    //console.log(req.query.searched)
 
     if (req.query.searched) {
-        params += `products.title LIKE '%${req.query.title}%'`
-        params += `AND products.description LIKE '%${req.query.description}%'`
+        params += ` where (products.title LIKE '%${req.query.searched}%'`
+        params += ` or products.description LIKE '%${req.query.searched}%')`
     } else {
         input.conditions = {
             '1': {
@@ -50,9 +51,10 @@ exports.read = async (req, res) => {
     })
 
 
+    //console.log(parseInt(req.query.limit))
     input.pagination = {
-        limit: parseInt(req.query.limit),
-        offset: (parseInt(req.query.offset) - 1) * parseInt(req.query.limit)
+        limit: !isNaN(parseInt(req.query.limit)) ? parseInt(req.query.limit) : 10,
+        offset: !isNaN(parseInt(req.query.offset)) ? (parseInt(req.query.offset) - 1) * parseInt(req.query.limit) : 0
     }
 
     input.column_names = [
@@ -77,8 +79,8 @@ exports.read = async (req, res) => {
             await successful_read(result, res, "Başarılı", meta_data)
 
         })
-        .catch((err) => {
-            server_error(res, err)
+        .catch(async (err) => {
+            await server_error(res, err)
         })
 
 

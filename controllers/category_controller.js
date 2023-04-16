@@ -45,21 +45,10 @@ exports.create = (req, res) => {
 }
 
 exports.read = async (req, res) => {
-    //first we need to check if the cache is available
-    const categories_cache = await client.get('Categories')
-
-    if (categories_cache) {
-        successful_read(JSON.parse(categories_cache), res, "Categories listed")
-        return
-    }
-
-    //if the cache is not available, we need to fetch the data from the database
     category.all({
         column_names: ['id', 'parent_id', 'title', 'slug']
     })
         .then(async (category_result) => {
-            const categories = categories_list(category_result)
-            await client.set('Categories', JSON.stringify(categories))
             successful_read(categories_list(category_result), res, "Categories listed")
         })
         .catch((err) => {
@@ -102,36 +91,6 @@ exports.view = (req, res) => {
                 return
             }
 
-            //products fetched from the cache
-            let products_cached = await client.get("Products")
-
-            //if there are values in the cache
-            if (products_cached) {
-                let counter = 0
-                const start = (parseInt(req.query.page) - 1) * parseInt(req.query.limit)
-                let end = start + parseInt(req.query.limit)
-                //console.log("start ", start, " end ", end)
-                products_cached = JSON.parse(products_cached)
-                //console.log(products_cached)
-
-                let filtered_products = Object.fromEntries(Object.entries(products_cached).filter(([key, value]) => {
-                    //console.log(value)
-                    //console.log(counter, start, end)
-                    if (isNaN(start) || isNaN(end)) {
-                        return categories_ids.includes(parseInt(value.category_id))
-                    } else if (start < end) {
-                        //paginates the products
-                        return categories_ids.includes(parseInt(value.category_id)) && ++counter && (counter - start > 0) && end--
-                    } else {
-                        return false
-                    }
-                }))
-
-                successful_read(filtered_products, res, "All the products listed with given category")
-                return
-            }
-
-            //if there are no values in the cache
             product.findBy({
                 column_names: ['products.id', 'products.title', 'products.slug', 'products.price', 'products.description', 'products.category_id', 'products.quantity'],
                 column: 'category_id',
